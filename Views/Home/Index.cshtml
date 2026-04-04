@@ -1,0 +1,343 @@
+﻿@model VinfastWeb.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Trang Chủ";
+}
+
+<!-- HERO -->
+<section class="ch-hero">
+    <div class="container">
+        <p class="ch-hero-tag">Tìm xe bán và cho thuê gần bạn</p>
+        <h1 class="ch-hero-title">Tìm Chiếc Xe<br><em>Mơ Ước</em> Của Bạn</h1>
+        <div style="display:flex;justify-content:center">
+            <div class="ch-search-bar">
+                <select class="ch-search-select">
+                    <option>Xe Máy Điện</option>
+                    <option>Ô Tô</option>
+                    <option>Phụ Kiện</option>
+                </select>
+                <select class="ch-search-select">
+                    <option>Tất cả hãng</option>
+                    <option>VinFast Evo</option>
+                    <option>VinFast Feliz</option>
+                    <option>VinFast VF</option>
+                </select>
+                <select class="ch-search-select">
+                    <option>Tất cả dòng</option>
+                    <option>Phổ Thông</option>
+                    <option>Trung Cấp</option>
+                    <option>Cao Cấp</option>
+                </select>
+                <button class="ch-search-btn" onclick="window.location='/Search'">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="ch-hero-img container">
+        <img src="/api-images/vinfast_home.png"
+             onerror="this.src='/api-images/vinfast_home_2.png'"
+             alt="VinFast" />
+    </div>
+</section>
+
+<!-- BROWSE BY TYPE -->
+<section class="ch-section ch-section-alt">
+    <div class="container">
+        <h2 class="ch-section-title">Duyệt Theo Danh Mục</h2>
+        <p class="ch-section-sub">Chọn phân khúc xe phù hợp với nhu cầu của bạn</p>
+        <div class="ch-types-grid-centered">
+
+            <a href="/Products?category=pho_thong" class="ch-type-card-lg">
+                <div class="ch-type-icon-lg" style="background:#fff3e0;color:#f57c00">
+                    <i class="fas fa-motorcycle"></i>
+                </div>
+                <span>Phổ Thông</span>
+            </a>
+
+            <a href="/Products?category=trung_cap" class="ch-type-card-lg">
+                <div class="ch-type-icon-lg" style="background:#e3f2fd;color:#1976d2">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <span>Trung Cấp</span>
+            </a>
+
+            <a href="/Products?category=cao_cap" class="ch-type-card-lg">
+                <div class="ch-type-icon-lg" style="background:#fce4ec;color:#c2185b">
+                    <i class="fas fa-star"></i>
+                </div>
+                <span>Cao Cấp</span>
+            </a>
+
+            <a href="/Cars" class="ch-type-card-lg">
+                <div class="ch-type-icon-lg" style="background:#e8f5e9;color:#388e3c">
+                    <i class="fas fa-car"></i>
+                </div>
+                <span>Ô Tô</span>
+            </a>
+
+            <a href="/Accessories" class="ch-type-card-lg">
+                <div class="ch-type-icon-lg" style="background:#f3e5f5;color:#6a1b9a">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <span>Phụ Kiện</span>
+            </a>
+
+            <a href="/Stores" class="ch-type-card-lg">
+                <div class="ch-type-icon-lg" style="background:#e8eaf6;color:#3949ab">
+                    <i class="fas fa-store"></i>
+                </div>
+                <span>Showroom</span>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA CARDS -->
+<section class="ch-section">
+    <div class="container">
+        <div class="ch-cta-grid">
+            <div class="ch-cta-card blue">
+                <div class="ch-cta-content">
+                    <h3>Bạn Đang Tìm<br>Mua Xe?</h3>
+                    <p>Khám phá hàng trăm mẫu xe điện chính hãng với giá tốt nhất thị trường.</p>
+                    <a href="/Products" class="ch-cta-btn blue">Khám phá ngay <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <i class="fas fa-motorcycle ch-cta-icon"></i>
+            </div>
+            <div class="ch-cta-card pink">
+                <div class="ch-cta-content">
+                    <h3>Bạn Muốn Tìm<br>Showroom?</h3>
+                    <p>Hệ thống 10+ cửa hàng VinFast tại Hà Nội, hỗ trợ tư vấn và lái thử miễn phí.</p>
+                    <a href="/Stores" class="ch-cta-btn dark">Tìm cửa hàng <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <i class="fas fa-store ch-cta-icon" style="color:rgba(233,30,99,0.12)"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MOST SEARCHED -->
+<section class="ch-section ch-section-alt">
+    <div class="container">
+        <h2 class="ch-section-title">Xe Được Tìm Nhiều Nhất</h2>
+        <div class="ch-tabs">
+            <span class="ch-tab active" data-filter="pho_thong">Phổ Thông</span>
+            <span class="ch-tab" data-filter="trung_cap">Trung Cấp</span>
+            <span class="ch-tab" data-filter="cao_cap">Cao Cấp</span>
+            <span class="ch-tab" data-filter="o_to">Ô Tô</span>
+        </div>
+        <div class="ch-product-grid">
+            @foreach (var item in Model.FeaturedMotorbikes.Take(4))
+            {
+                <div class="ch-product-card">
+                    <div class="ch-product-img">
+                        <div class="ch-product-badge-wrap">
+                            @if (item.Category == "cao_cap")
+                            {
+                                <span class="ch-badge green">Nổi Bật</span>
+                            }
+                            else
+                            {
+                                <span class="ch-badge blue">Mới</span>
+                            }
+                    </div>
+                    <button class="ch-wish"><i class="far fa-heart"></i></button>
+                    <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
+                </div>
+                <div class="ch-product-body">
+                    <div class="ch-product-name">@item.Name</div>
+                    <div class="ch-product-sub">
+                        @(item.Category == "pho_thong" ? "Xe Máy Điện · Phổ Thông" :
+                                                item.Category == "trung_cap" ? "Xe Máy Điện · Trung Cấp" : "Xe Máy Điện · Cao Cấp")
+                    </div>
+                    <div class="ch-product-specs">
+                        <div class="ch-spec"><i class="fas fa-bolt"></i><span>Điện</span></div>
+                        <div class="ch-spec"><i class="fas fa-battery-full"></i><span>Pin</span></div>
+                        <div class="ch-spec"><i class="fas fa-tachometer-alt"></i><span>Thông minh</span></div>
+                    </div>
+                    <div class="ch-product-footer">
+                        <div class="ch-price">@item.FormattedPrice</div>
+                        <a href="/Products/Detail/@item.Id" class="ch-view-btn">
+                            Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+                        }
+        </div>
+        <div class="ch-center">
+            <a href="/Products" class="ch-view-all">Xem tất cả xe <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="ch-section">
+    <div class="container">
+        <h2 class="ch-section-title">Tại Sao Chọn VinFast?</h2>
+        <p class="ch-section-sub">Cam kết mang đến trải nghiệm mua xe tốt nhất cho mọi khách hàng</p>
+        <div class="ch-why-grid">
+            <div class="ch-why-item">
+                <div class="ch-why-icon" style="background:#e8f5e9;color:#388e3c"><i class="fas fa-shield-alt"></i></div>
+                <div class="ch-why-title">Bảo Hành Chính Hãng</div>
+                <p class="ch-why-desc">Bảo hành toàn diện 3 năm hoặc 50.000 km, hỗ trợ kỹ thuật 24/7 toàn quốc.</p>
+            </div>
+            <div class="ch-why-item">
+                <div class="ch-why-icon" style="background:#e3f2fd;color:#1976d2"><i class="fas fa-store"></i></div>
+                <div class="ch-why-title">Hệ Thống Showroom</div>
+                <p class="ch-why-desc">Hơn 10 cửa hàng tại Hà Nội, trải nghiệm lái thử miễn phí trước khi quyết định.</p>
+            </div>
+            <div class="ch-why-item">
+                <div class="ch-why-icon" style="background:#fff3e0;color:#f57c00"><i class="fas fa-tag"></i></div>
+                <div class="ch-why-title">Giá Minh Bạch</div>
+                <p class="ch-why-desc">Giá niêm yết rõ ràng, không phát sinh thêm phí, nhiều chương trình ưu đãi hấp dẫn.</p>
+            </div>
+            <div class="ch-why-item">
+                <div class="ch-why-icon" style="background:#fce4ec;color:#c2185b"><i class="fas fa-headset"></i></div>
+                <div class="ch-why-title">Hỗ Trợ Chuyên Nghiệp</div>
+                <p class="ch-why-desc">Đội ngũ tư vấn nhiệt tình, giải quyết vấn đề nhanh chóng và hiệu quả.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STORES -->
+<section class="ch-section ch-section-alt">
+    <div class="container">
+        <h2 class="ch-section-title">Hệ Thống Showroom Hà Nội</h2>
+        <p class="ch-section-sub">Ghé thăm và trải nghiệm xe trực tiếp tại cửa hàng gần bạn nhất</p>
+        <div class="ch-store-grid">
+            @foreach (var store in Model.Stores.Take(5))
+            {
+                <div class="ch-store-card">
+                    <div class="ch-store-img">
+                        <img src="@store.ImageUrl" alt="@store.Name" loading="lazy"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
+                    </div>
+                    <div class="ch-store-body">
+                        <div class="ch-store-name">@store.Name</div>
+                        <div class="ch-store-rating">
+                            <span class="stars">
+                                @{
+                                    int rating = (int)store.Rating;
+                                }
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    if (i < rating)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-star" style="opacity:.25"></i>
+                                    }
+                                }
+                            </span>
+                            <span>@store.Rating</span>
+                        </div>
+                        <div class="ch-store-addr">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>@store.Address</span>
+                        </div>
+                    </div>
+                    <a href="/Stores/Detail/@store.Id" class="ch-store-btn">Xem chi tiết</a>
+                </div>
+            }
+        </div>
+        <div class="ch-center">
+            <a href="/Stores" class="ch-view-all">Xem tất cả showroom <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- VOUCHERS -->
+@if (Model.Vouchers.Any())
+{
+    <section class="ch-section">
+        <div class="container">
+            <h2 class="ch-section-title">Ưu Đãi Đang Diễn Ra</h2>
+            <p class="ch-section-sub">Đừng bỏ lỡ các chương trình khuyến mãi hấp dẫn từ VinFast</p>
+            <div class="ch-voucher-grid">
+                @foreach (var v in Model.Vouchers)
+                {
+                    <div class="ch-voucher-card">
+                        <div class="ch-voucher-stripe"></div>
+                        <div class="ch-voucher-img">
+                            <img src="@v.ImageUrl" alt="@v.Title" loading="lazy">
+                        </div>
+                        <div class="ch-voucher-body">
+                            <div class="ch-voucher-title">@v.Title</div>
+                            <div class="ch-voucher-desc">@v.Description</div>
+                            <div class="ch-voucher-code" onclick="copyCode('@v.Code')">
+                                <i class="fas fa-copy"></i> @v.Code
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<!-- NEWS -->
+<section class="ch-section ch-section-alt">
+    <div class="container">
+        <h2 class="ch-section-title">Tin Tức Mới Nhất</h2>
+        <p class="ch-section-sub">Cập nhật những thông tin mới nhất từ VinFast</p>
+        <div class="ch-news-grid">
+            <a href="#" class="ch-news-card">
+                <div class="ch-news-img">
+                    <img src="/api-images/news/news1.jpg" alt="Tin 1" loading="lazy">
+                    <span class="ch-news-cat">Sản phẩm mới</span>
+                </div>
+                <div class="ch-news-body">
+                    <div class="ch-news-meta">Admin &nbsp;·&nbsp; 15/03/2025</div>
+                    <div class="ch-news-title">VinFast ra mắt dòng xe Evo Series 2025 với nhiều nâng cấp vượt trội</div>
+                </div>
+                <div class="ch-news-footer">
+                    <span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+            <a href="#" class="ch-news-card">
+                <div class="ch-news-img">
+                    <img src="/api-images/news/news2.jpg" alt="Tin 2" loading="lazy">
+                    <span class="ch-news-cat">Công nghệ</span>
+                </div>
+                <div class="ch-news-body">
+                    <div class="ch-news-meta">Admin &nbsp;·&nbsp; 10/03/2025</div>
+                    <div class="ch-news-title">Hệ thống trạm sạc nhanh mở rộng phủ sóng 63 tỉnh thành toàn quốc</div>
+                </div>
+                <div class="ch-news-footer">
+                    <span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+            <a href="#" class="ch-news-card">
+                <div class="ch-news-img">
+                    <img src="/api-images/news/news3.jpg" alt="Tin 3" loading="lazy">
+                    <span class="ch-news-cat">Ưu đãi</span>
+                </div>
+                <div class="ch-news-body">
+                    <div class="ch-news-meta">Admin &nbsp;·&nbsp; 05/03/2025</div>
+                    <div class="ch-news-title">Đổi xe cũ lấy xe mới — Ưu đãi lên đến 15 triệu đồng trong tháng 4</div>
+                </div>
+                <div class="ch-news-footer">
+                    <span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- JOIN -->
+<div class="ch-join">
+    <div class="container">
+        <h2>Đăng Ký Nhận Tin Tức</h2>
+        <p>Nhận cập nhật giá xe, ưu đãi và tin tức mới nhất từ VinFast</p>
+        <div class="ch-join-form">
+            <input type="email" class="ch-join-input" placeholder="Nhập email của bạn...">
+            <button class="ch-join-btn">Đăng Ký</button>
+        </div>
+    </div>
+</div>
