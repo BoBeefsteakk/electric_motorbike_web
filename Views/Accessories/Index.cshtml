@@ -1,0 +1,58 @@
+﻿@model List<VinfastWeb.Models.Accessory>
+@{
+    ViewData["Title"] = "Phụ Kiện VinFast";
+}
+
+<div class="pd-header">
+    <div class="container">
+        <nav class="pd-breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Phụ Kiện</span>
+        </nav>
+        <h1 class="pd-header-title">Phụ Kiện Chính Hãng</h1>
+        <p class="pd-header-sub">@Model.Count sản phẩm phụ kiện VinFast</p>
+    </div>
+</div>
+
+<section class="pd-section">
+    <div class="container">
+        @if (!Model.Any())
+        {
+            <div class="pd-empty">
+                <i class="fas fa-tools"></i>
+                <h3>Chưa có phụ kiện</h3>
+                <p>Vui lòng quay lại sau.</p>
+                <a href="/" class="pd-btn-primary">Về trang chủ</a>
+            </div>
+        }
+        else
+        {
+            <div class="pd-grid" id="productGrid">
+                @foreach (var item in Model)
+                {
+                    <div class="pd-card" data-price="@item.Price" data-name="@item.Name">
+                        <div class="pd-card-img">
+                            <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
+                                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
+                            <div class="pd-card-badge">Chính Hãng</div>
+                            <div class="pd-card-wish"><i class="far fa-heart"></i></div>
+                        </div>
+                        <div class="pd-card-body">
+                            <div class="pd-card-cat">VinFast · Phụ Kiện</div>
+                            <div class="pd-card-name">@item.Name</div>
+                            <div class="pd-card-specs">
+                                <span><i class="fas fa-check-circle"></i> Chính hãng</span>
+                                <span><i class="fas fa-shield-alt"></i> Bảo hành</span>
+                            </div>
+                            <div class="pd-card-footer">
+                                <div class="pd-card-price">@item.FormattedPrice</div>
+                                <div class="pd-card-btn">Xem chi tiết <i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

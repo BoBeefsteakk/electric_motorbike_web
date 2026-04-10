@@ -12,25 +12,38 @@ namespace VinfastWeb.Controllers
         // GET /Products hoặc /Products?category=pho_thong
         public async Task<IActionResult> Index(string? category)
         {
-            var all = await _api.GetMotorbikesAsync();
-            var filtered = string.IsNullOrEmpty(category)
-                ? all
-                : all.Where(m => m.Category == category).ToList();
-
-            var label = category switch
+            try
             {
-                "pho_thong" => "Xe Phổ Thông",
-                "trung_cap" => "Xe Trung Cấp",
-                "cao_cap" => "Xe Cao Cấp",
-                _ => "Tất Cả Xe Máy"
-            };
+                var all = await _api.GetMotorbikesAsync();
 
-            return View(new ProductsViewModel
+                if (all == null)
+                {
+                    return Content("API trả về NULL");
+                }
+
+                var filtered = string.IsNullOrEmpty(category)
+                    ? all
+                    : all.Where(m => m.Category == category).ToList();
+
+                var label = category switch
+                {
+                    "pho_thong" => "Xe Phổ Thông",
+                    "trung_cap" => "Xe Trung Cấp",
+                    "cao_cap" => "Xe Cao Cấp",
+                    _ => "Tất Cả Xe Máy"
+                };
+
+                return View(new ProductsViewModel
+                {
+                    Motorbikes = filtered,
+                    Category = category,
+                    CategoryLabel = label
+                });
+            }
+            catch (Exception ex)
             {
-                Motorbikes = filtered,
-                Category = category,
-                CategoryLabel = label
-            });
+                return Content("Lỗi: " + ex.Message);
+            }
         }
 
         // GET /Products/Detail/5

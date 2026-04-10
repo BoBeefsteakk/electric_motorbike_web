@@ -5,38 +5,44 @@
 
 <!-- HERO -->
 <section class="ch-hero">
-    <div class="container">
-        <p class="ch-hero-tag">Tìm xe bán và cho thuê gần bạn</p>
-        <h1 class="ch-hero-title">Tìm Chiếc Xe<br><em>Mơ Ước</em> Của Bạn</h1>
-        <div style="display:flex;justify-content:center">
-            <div class="ch-search-bar">
-                <select class="ch-search-select">
-                    <option>Xe Máy Điện</option>
-                    <option>Ô Tô</option>
-                    <option>Phụ Kiện</option>
-                </select>
-                <select class="ch-search-select">
-                    <option>Tất cả hãng</option>
-                    <option>VinFast Evo</option>
-                    <option>VinFast Feliz</option>
-                    <option>VinFast VF</option>
-                </select>
-                <select class="ch-search-select">
-                    <option>Tất cả dòng</option>
-                    <option>Phổ Thông</option>
-                    <option>Trung Cấp</option>
-                    <option>Cao Cấp</option>
-                </select>
-                <button class="ch-search-btn" onclick="window.location='/Search'">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+    <!-- 3 slides full-screen, tự chuyển -->
+    <div class="ch-hero-slides">
+        <div class="ch-hero-slide active">
+            <img src="http://localhost:5000/images/car/Vinfast VF7.jpg" alt="VinFast VF7" />
+        </div>
+        <div class="ch-hero-slide">
+            <img src="http://localhost:5000/images/car/Vinfast VF6.jpg" alt="VinFast VF6" />
+        </div>
+        <div class="ch-hero-slide">
+            <img src="http://localhost:5000/images/car/Vinfast VF8.jpg" alt="VinFast VF8" />
         </div>
     </div>
-    <div class="ch-hero-img container">
-        <img src="/api-images/vinfast_home.png"
-             onerror="this.src='/api-images/vinfast_home_2.png'"
-             alt="VinFast" />
+
+    <!-- Overlay tối -->
+    <div class="ch-hero-overlay"></div>
+
+    <!-- Nội dung text -->
+    <div class="ch-hero-content">
+        <p class="ch-hero-eyebrow">
+            <span class="ch-hero-dot"></span>
+            Tìm xe bán và cho thuê gần bạn
+        </p>
+        <h1 class="ch-hero-title">
+            Tìm Chiếc Xe<br>
+            <em>Mơ Ước</em> Của Bạn
+        </h1>
+        <p class="ch-hero-sub">Hàng trăm mẫu xe VinFast chính hãng · Giao tận nơi · Hỗ trợ trả góp</p>
+        <div class="ch-hero-actions">
+            <a href="/Products" class="ch-hero-btn-primary">Khám phá xe ngay <i class="fas fa-arrow-right"></i></a>
+            <a href="/Stores" class="ch-hero-btn-ghost">Tìm showroom <i class="fas fa-map-marker-alt"></i></a>
+        </div>
+    </div>
+
+    <!-- Dots điều hướng -->
+    <div class="ch-hero-dots">
+        <button class="ch-hero-dot-btn active" onclick="goSlide(0)"></button>
+        <button class="ch-hero-dot-btn" onclick="goSlide(1)"></button>
+        <button class="ch-hero-dot-btn" onclick="goSlide(2)"></button>
     </div>
 </section>
 
@@ -117,84 +123,159 @@
     </div>
 </section>
 
-<!-- MOST SEARCHED -->
+<!-- MOST SEARCHED - với tab filter thực sự hoạt động -->
 <section class="ch-section ch-section-alt">
     <div class="container">
         <h2 class="ch-section-title">Xe Được Tìm Nhiều Nhất</h2>
         <div class="ch-tabs">
-            <span class="ch-tab active" data-filter="pho_thong">Phổ Thông</span>
-            <span class="ch-tab" data-filter="trung_cap">Trung Cấp</span>
-            <span class="ch-tab" data-filter="cao_cap">Cao Cấp</span>
-            <span class="ch-tab" data-filter="o_to">Ô Tô</span>
+            <span class="ch-tab active" data-filter="pho_thong" onclick="filterProducts('pho_thong',this)">Phổ Thông</span>
+            <span class="ch-tab" data-filter="trung_cap" onclick="filterProducts('trung_cap',this)">Trung Cấp</span>
+            <span class="ch-tab" data-filter="cao_cap" onclick="filterProducts('cao_cap',this)">Cao Cấp</span>
+            <span class="ch-tab" data-filter="o_to" onclick="filterProducts('o_to',this)">Ô Tô</span>
         </div>
-        <div class="ch-product-grid">
-            @foreach (var item in Model.FeaturedMotorbikes.Take(4))
+
+        <!-- Xe máy cards - ẩn/hiện theo tab -->
+        <div class="ch-product-grid" id="grid-pho_thong">
+            @foreach (var item in Model.FeaturedMotorbikes.Where(x => x.Category == "pho_thong").Take(4))
             {
                 <div class="ch-product-card">
                     <div class="ch-product-img">
-                        <div class="ch-product-badge-wrap">
-                            @if (item.Category == "cao_cap")
-                            {
-                                <span class="ch-badge green">Nổi Bật</span>
-                            }
-                            else
-                            {
-                                <span class="ch-badge blue">Mới</span>
-                            }
+                        <div class="ch-product-badge-wrap"><span class="ch-badge blue">Phổ Thông</span></div>
+                        <div class="ch-wish"><i class="far fa-heart"></i></div>
+                        <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
                     </div>
-                    <button class="ch-wish"><i class="far fa-heart"></i></button>
+                    <div class="ch-product-body">
+                        <div class="ch-product-name">@item.Name</div>
+                        <div class="ch-product-sub">Xe Máy Điện · Phổ Thông</div>
+                        <div class="ch-product-specs">
+                            <div class="ch-spec"><i class="fas fa-bolt"></i><span>Điện</span></div>
+                            <div class="ch-spec"><i class="fas fa-battery-full"></i><span>Pin LFP</span></div>
+                            <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
+                        </div>
+                        <div class="ch-product-footer">
+                            <div class="ch-price">@item.FormattedPrice</div>
+                            <a href="/Products/Detail/@item.Id" class="ch-view-btn">Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="ch-product-grid" id="grid-trung_cap" style="display:none">
+            @foreach (var item in Model.FeaturedMotorbikes.Where(x => x.Category == "trung_cap").Take(4))
+            {
+                <div class="ch-product-card">
+                    <div class="ch-product-img">
+                        <div class="ch-product-badge-wrap"><span class="ch-badge blue">Trung Cấp</span></div>
+                        <div class="ch-wish"><i class="far fa-heart"></i></div>
+                        <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
+                    </div>
+                    <div class="ch-product-body">
+                        <div class="ch-product-name">@item.Name</div>
+                        <div class="ch-product-sub">Xe Máy Điện · Trung Cấp</div>
+                        <div class="ch-product-specs">
+                            <div class="ch-spec"><i class="fas fa-bolt"></i><span>Điện</span></div>
+                            <div class="ch-spec"><i class="fas fa-battery-full"></i><span>Pin NMC</span></div>
+                            <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
+                        </div>
+                        <div class="ch-product-footer">
+                            <div class="ch-price">@item.FormattedPrice</div>
+                            <a href="/Products/Detail/@item.Id" class="ch-view-btn">Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="ch-product-grid" id="grid-cao_cap" style="display:none">
+            @foreach (var item in Model.FeaturedMotorbikes.Where(x => x.Category == "cao_cap").Take(4))
+            {
+                <div class="ch-product-card">
+                    <div class="ch-product-img">
+                        <div class="ch-product-badge-wrap"><span class="ch-badge green">Cao Cấp</span></div>
+                        <div class="ch-wish"><i class="far fa-heart"></i></div>
+                        <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
+                    </div>
+                    <div class="ch-product-body">
+                        <div class="ch-product-name">@item.Name</div>
+                        <div class="ch-product-sub">Xe Máy Điện · Cao Cấp</div>
+                        <div class="ch-product-specs">
+                            <div class="ch-spec"><i class="fas fa-bolt"></i><span>Điện</span></div>
+                            <div class="ch-spec"><i class="fas fa-battery-full"></i><span>Pin NMC+</span></div>
+                            <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
+                        </div>
+                        <div class="ch-product-footer">
+                            <div class="ch-price">@item.FormattedPrice</div>
+                            <a href="/Products/Detail/@item.Id" class="ch-view-btn">Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="ch-product-grid" id="grid-o_to" style="display:none">
+            @foreach (var item in Model.FeaturedCars.Take(4))
+            {
+                <a href="/Cars" class="ch-product-card">
+                    <div class="ch-product-img">
+                        <div class="ch-product-badge-wrap">
+                            <span class="ch-badge blue">
+                                @(item.Category == "dong_co_dien" ? "Xe Điện" :
+                                                            item.Category == "dong_co_xang" ? "Xe Xăng" : "Dịch Vụ")
+                        </span>
+                    </div>
+                    <div class="ch-wish"><i class="far fa-heart"></i></div>
                     <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
                 </div>
                 <div class="ch-product-body">
                     <div class="ch-product-name">@item.Name</div>
-                    <div class="ch-product-sub">
-                        @(item.Category == "pho_thong" ? "Xe Máy Điện · Phổ Thông" :
-                                                item.Category == "trung_cap" ? "Xe Máy Điện · Trung Cấp" : "Xe Máy Điện · Cao Cấp")
-                    </div>
+                    <div class="ch-product-sub">Ô Tô VinFast</div>
                     <div class="ch-product-specs">
-                        <div class="ch-spec"><i class="fas fa-bolt"></i><span>Điện</span></div>
-                        <div class="ch-spec"><i class="fas fa-battery-full"></i><span>Pin</span></div>
-                        <div class="ch-spec"><i class="fas fa-tachometer-alt"></i><span>Thông minh</span></div>
+                        <div class="ch-spec"><i class="fas fa-car"></i><span>VinFast</span></div>
+                        <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
+                        <div class="ch-spec"><i class="fas fa-tag"></i><span>Chính hãng</span></div>
                     </div>
                     <div class="ch-product-footer">
                         <div class="ch-price">@item.FormattedPrice</div>
-                        <a href="/Products/Detail/@item.Id" class="ch-view-btn">
-                            Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i>
-                        </a>
+                        <span class="ch-view-btn">Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i></span>
                     </div>
                 </div>
-            </div>
+            </a>
                         }
         </div>
+
         <div class="ch-center">
-            <a href="/Products" class="ch-view-all">Xem tất cả xe <i class="fas fa-arrow-right"></i></a>
+            <a href="/Products" class="ch-view-all" id="viewAllLink">Xem tất cả xe máy <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </section>
 
-<!-- WHY CHOOSE US -->
+<!-- WHY CHOOSE US - với hover effect -->
 <section class="ch-section">
     <div class="container">
         <h2 class="ch-section-title">Tại Sao Chọn VinFast?</h2>
         <p class="ch-section-sub">Cam kết mang đến trải nghiệm mua xe tốt nhất cho mọi khách hàng</p>
         <div class="ch-why-grid">
-            <div class="ch-why-item">
+            <div class="ch-why-item ch-why-hoverable">
                 <div class="ch-why-icon" style="background:#e8f5e9;color:#388e3c"><i class="fas fa-shield-alt"></i></div>
                 <div class="ch-why-title">Bảo Hành Chính Hãng</div>
                 <p class="ch-why-desc">Bảo hành toàn diện 3 năm hoặc 50.000 km, hỗ trợ kỹ thuật 24/7 toàn quốc.</p>
             </div>
-            <div class="ch-why-item">
+            <div class="ch-why-item ch-why-hoverable">
                 <div class="ch-why-icon" style="background:#e3f2fd;color:#1976d2"><i class="fas fa-store"></i></div>
                 <div class="ch-why-title">Hệ Thống Showroom</div>
                 <p class="ch-why-desc">Hơn 10 cửa hàng tại Hà Nội, trải nghiệm lái thử miễn phí trước khi quyết định.</p>
             </div>
-            <div class="ch-why-item">
+            <div class="ch-why-item ch-why-hoverable">
                 <div class="ch-why-icon" style="background:#fff3e0;color:#f57c00"><i class="fas fa-tag"></i></div>
                 <div class="ch-why-title">Giá Minh Bạch</div>
                 <p class="ch-why-desc">Giá niêm yết rõ ràng, không phát sinh thêm phí, nhiều chương trình ưu đãi hấp dẫn.</p>
             </div>
-            <div class="ch-why-item">
+            <div class="ch-why-item ch-why-hoverable">
                 <div class="ch-why-icon" style="background:#fce4ec;color:#c2185b"><i class="fas fa-headset"></i></div>
                 <div class="ch-why-title">Hỗ Trợ Chuyên Nghiệp</div>
                 <p class="ch-why-desc">Đội ngũ tư vấn nhiệt tình, giải quyết vấn đề nhanh chóng và hiệu quả.</p>
@@ -208,44 +289,57 @@
     <div class="container">
         <h2 class="ch-section-title">Hệ Thống Showroom Hà Nội</h2>
         <p class="ch-section-sub">Ghé thăm và trải nghiệm xe trực tiếp tại cửa hàng gần bạn nhất</p>
-        <div class="ch-store-grid">
-            @foreach (var store in Model.Stores.Take(5))
-            {
-                <div class="ch-store-card">
-                    <div class="ch-store-img">
-                        <img src="@store.ImageUrl" alt="@store.Name" loading="lazy"
-                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
-                    </div>
-                    <div class="ch-store-body">
-                        <div class="ch-store-name">@store.Name</div>
-                        <div class="ch-store-rating">
-                            <span class="stars">
-                                @{
-                                    int rating = (int)store.Rating;
-                                }
-                                @for (int i = 0; i < 5; i++)
-                                {
-                                    if (i < rating)
-                                    {
-                                        <i class="fas fa-star"></i>
-                                    }
-                                    else
-                                    {
-                                        <i class="fas fa-star" style="opacity:.25"></i>
-                                    }
-                                }
-                            </span>
-                            <span>@store.Rating</span>
+        @if (!Model.Stores.Any())
+        {
+            <div class="pd-empty">
+                <i class="fas fa-store"></i>
+                <h3>Đang tải showroom...</h3>
+                <p>Vui lòng đảm bảo Node.js backend đang chạy tại localhost:5000</p>
+                <a href="/Stores" class="pd-btn-primary">Xem tất cả showroom</a>
+            </div>
+        }
+        else
+        {
+            <div class="ch-store-grid">
+                @foreach (var store in Model.Stores.Take(5))
+                {
+                    <div class="ch-store-card">
+                        <div class="ch-store-img">
+                            <img src="@store.ImageUrl" alt="@store.Name" loading="lazy"
+                                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
                         </div>
-                        <div class="ch-store-addr">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>@store.Address</span>
+                        <div class="ch-store-body">
+                            <div class="ch-store-name">@store.Name</div>
+                            <div class="ch-store-rating">
+                                <span class="stars">
+                                    @{
+                                        int rating = store.RatingInt;
+                                    }
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (i < rating)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        else
+                                        {
+
+                                            <i class="fas fa-star" style="opacity:.25"></i>
+                                        }
+                                    }
+                                </span>
+                                <span>@store.Rating</span>
+                            </div>
+                            <div class="ch-store-addr">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>@store.Address</span>
+                            </div>
                         </div>
+                        <a href="/Stores/Detail/@store.Id" class="ch-store-btn">Xem chi tiết</a>
                     </div>
-                    <a href="/Stores/Detail/@store.Id" class="ch-store-btn">Xem chi tiết</a>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
         <div class="ch-center">
             <a href="/Stores" class="ch-view-all">Xem tất cả showroom <i class="fas fa-arrow-right"></i></a>
         </div>
@@ -264,9 +358,7 @@
                 {
                     <div class="ch-voucher-card">
                         <div class="ch-voucher-stripe"></div>
-                        <div class="ch-voucher-img">
-                            <img src="@v.ImageUrl" alt="@v.Title" loading="lazy">
-                        </div>
+                        <div class="ch-voucher-img"><img src="@v.ImageUrl" alt="@v.Title" loading="lazy"></div>
                         <div class="ch-voucher-body">
                             <div class="ch-voucher-title">@v.Title</div>
                             <div class="ch-voucher-desc">@v.Description</div>
@@ -296,9 +388,7 @@
                     <div class="ch-news-meta">Admin &nbsp;·&nbsp; 15/03/2025</div>
                     <div class="ch-news-title">VinFast ra mắt dòng xe Evo Series 2025 với nhiều nâng cấp vượt trội</div>
                 </div>
-                <div class="ch-news-footer">
-                    <span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span>
-                </div>
+                <div class="ch-news-footer"><span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span></div>
             </a>
             <a href="#" class="ch-news-card">
                 <div class="ch-news-img">
@@ -309,9 +399,7 @@
                     <div class="ch-news-meta">Admin &nbsp;·&nbsp; 10/03/2025</div>
                     <div class="ch-news-title">Hệ thống trạm sạc nhanh mở rộng phủ sóng 63 tỉnh thành toàn quốc</div>
                 </div>
-                <div class="ch-news-footer">
-                    <span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span>
-                </div>
+                <div class="ch-news-footer"><span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span></div>
             </a>
             <a href="#" class="ch-news-card">
                 <div class="ch-news-img">
@@ -322,9 +410,7 @@
                     <div class="ch-news-meta">Admin &nbsp;·&nbsp; 05/03/2025</div>
                     <div class="ch-news-title">Đổi xe cũ lấy xe mới — Ưu đãi lên đến 15 triệu đồng trong tháng 4</div>
                 </div>
-                <div class="ch-news-footer">
-                    <span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span>
-                </div>
+                <div class="ch-news-footer"><span class="ch-news-link">Đọc thêm <i class="fas fa-arrow-right"></i></span></div>
             </a>
         </div>
     </div>
@@ -341,3 +427,69 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Hero slideshow
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.ch-hero-slide');
+        const dots = document.querySelectorAll('.ch-hero-dot-btn');
+
+        function goSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            currentSlide = n;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            goSlide((currentSlide + 1) % slides.length);
+        }
+
+        let slideTimer = setInterval(nextSlide, 5000);
+
+        // Reset timer khi click dot
+        document.querySelectorAll('.ch-hero-dot-btn').forEach((btn, i) => {
+            btn.addEventListener('click', () => {
+                clearInterval(slideTimer);
+                slideTimer = setInterval(nextSlide, 5000);
+            });
+        });
+
+        // Tab filter hoạt động thực sự
+        function filterProducts(filter, el) {
+          // Update tabs
+          document.querySelectorAll('.ch-tab').forEach(t => t.classList.remove('active'));
+          el.classList.add('active');
+
+          // Ẩn tất cả grids
+          document.querySelectorAll('[id^="grid-"]').forEach(g => g.style.display = 'none');
+
+          // Hiện grid tương ứng
+          const grid = document.getElementById('grid-' + filter);
+          if (grid) grid.style.display = 'grid';
+
+          // Cập nhật link "Xem tất cả"
+          const link = document.getElementById('viewAllLink');
+          if (filter === 'o_to') {
+            link.href = '/Cars';
+            link.innerHTML = 'Xem tất cả ô tô <i class="fas fa-arrow-right"></i>';
+            document.getElementById('grid-o_to').style.display = 'grid';
+          } else {
+            link.href = '/Products?category=' + filter;
+            const labels = { pho_thong: 'xe phổ thông', trung_cap: 'xe trung cấp', cao_cap: 'xe cao cấp' };
+            link.innerHTML = 'Xem tất cả ' + (labels[filter] || 'xe') + ' <i class="fas fa-arrow-right"></i>';
+          }
+        }
+
+        // Search bar
+        function doSearch() {
+          const type = document.getElementById('searchType').value;
+          const cat  = document.getElementById('searchCategory').value;
+          if (type === 'car') { window.location = '/Cars'; return; }
+          if (type === 'accessory') { window.location = '/Accessories'; return; }
+          window.location = cat ? '/Products?category=' + cat : '/Products';
+        }
+    </script>
+}

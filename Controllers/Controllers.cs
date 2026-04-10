@@ -61,6 +61,14 @@ namespace VinfastWeb.Controllers
             if (store == null) return NotFound();
             return View(store);
         }
+
+        // JSON endpoint cho Store Detail page dùng JS fetch xe
+        [Microsoft.AspNetCore.Mvc.HttpGet("/api/products-json")]
+        public async Task<IActionResult> ProductsJson()
+        {
+            var items = await _api.GetMotorbikesAsync();
+            return Json(items);
+        }
     }
 
     // ── VOUCHERS ──────────────────────────────────────────────────────────────

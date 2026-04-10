@@ -15,6 +15,7 @@ D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.csproj.CoreCompileIn
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.MvcApplicationPartsAssemblyInfo.cache
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.RazorAssemblyInfo.cache
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.RazorAssemblyInfo.cs
+D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.sourcelink.json
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\rjimswa.dswa.cache.json
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json

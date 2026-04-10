@@ -1,0 +1,196 @@
+﻿@model VinfastWeb.Models.Store
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<!-- HERO BANNER - ảnh lớn + tên overlay như mobile -->
+<div class="std-hero">
+    <img src="@Model.ImageUrl" alt="@Model.Name"
+         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 9%22%3E%3Crect fill=%22%231a2540%22 width=%2216%22 height=%229%22/%3E%3C/svg%3E'" />
+    <div class="std-hero-overlay"></div>
+    <div class="std-hero-content">
+        <nav class="std-breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="/Stores">Showroom</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>@Model.Name</span>
+        </nav>
+        <h1 class="std-hero-title">@Model.Name</h1>
+    </div>
+</div>
+
+<!-- INFO CARD - giống mobile -->
+<section class="std-section">
+    <div class="container">
+        <div class="std-layout">
+
+            <!-- LEFT: info + xe -->
+            <div class="std-left">
+
+                <!-- Info card -->
+                <div class="std-info-card">
+                    <div class="std-info-row">
+                        <div class="std-info-item">
+                            <i class="fas fa-star" style="color:#f59e0b"></i>
+                            <strong>@Model.Rating</strong>
+                            <span>Đánh giá</span>
+                        </div>
+                        <div class="std-info-divider"></div>
+                        <div class="std-info-item">
+                            <i class="fas fa-clock" style="color:#3D5AFE"></i>
+                            <strong>08:00</strong>
+                            <span>– 20:00</span>
+                        </div>
+                        <div class="std-info-divider"></div>
+                        <div class="std-info-item">
+                            <i class="fas fa-map-marker-alt" style="color:#ef4444"></i>
+                            <strong>Hà Nội</strong>
+                            <span>@Model.Address</span>
+                        </div>
+                    </div>
+                    <p class="std-info-desc">
+                        Cửa hàng cung cấp đầy đủ các dòng xe điện VinFast từ phổ thông đến cao cấp,
+                        bảo hành chính hãng, hỗ trợ trả góp linh hoạt, đội ngũ tư vấn chuyên nghiệp
+                        và dịch vụ hậu mãi uy tín.
+                    </p>
+                    <div class="std-info-badges">
+                        <span><i class="fas fa-check-circle"></i> Lái thử miễn phí</span>
+                        <span><i class="fas fa-check-circle"></i> Trả góp 0%</span>
+                        <span><i class="fas fa-check-circle"></i> Bảo hành chính hãng</span>
+                        <span><i class="fas fa-check-circle"></i> Đổi trả 30 ngày</span>
+                    </div>
+                </div>
+
+                <!-- Filter tabs xe -->
+                <div class="std-tabs">
+                    <button class="std-tab active" onclick="filterStore('pho_thong',this)">
+                        <i class="fas fa-motorcycle"></i> Phổ Thông
+                    </button>
+                    <button class="std-tab" onclick="filterStore('trung_cap',this)">
+                        <i class="fas fa-bolt"></i> Trung Cấp
+                    </button>
+                    <button class="std-tab" onclick="filterStore('cao_cap',this)">
+                        <i class="fas fa-star"></i> Cao Cấp
+                    </button>
+                </div>
+
+                <p class="std-xe-count" id="xeCount">Đang tải danh sách xe...</p>
+
+                <!-- Xe grid - load từ API -->
+                <div class="std-xe-grid" id="xeGrid">
+                    <div class="std-loading">
+                        <i class="fas fa-spinner fa-spin"></i> Đang tải...
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: sidebar -->
+            <div class="std-right">
+
+                <!-- Map placeholder -->
+                <div class="std-map-card">
+                    <div class="std-map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Bản đồ đang cập nhật</p>
+                        <a href="https://maps.google.com/search/@Model.Name+Hà+Nội" target="_blank" class="std-map-btn">
+                            <i class="fas fa-directions"></i> Chỉ Đường
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact card -->
+                <div class="std-contact-card">
+                    <h3><i class="fas fa-headset"></i> Liên Hệ Showroom</h3>
+                    <div class="std-contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <span>Hotline</span>
+                            <strong>1800 599 961</strong>
+                        </div>
+                    </div>
+                    <div class="std-contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <span>Thứ 2 – Thứ 6</span>
+                            <strong>08:00 – 20:00</strong>
+                        </div>
+                    </div>
+                    <div class="std-contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <span>Thứ 7</span>
+                            <strong>08:00 – 18:00</strong>
+                        </div>
+                    </div>
+                    <a href="/Auth/Login" class="std-consult-btn">
+                        <i class="fas fa-calendar-alt"></i> Đặt Lịch Tư Vấn
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        let allXe = [];
+        let currentCat = 'pho_thong';
+
+        // Load xe từ API khi trang mở
+        async function loadXe() {
+          try {
+            const res = await fetch('/api/products-json');
+            if (res.ok) {
+              allXe = await res.json();
+            }
+          } catch {}
+          // Fallback: gọi trực tiếp Node.js
+          if (!allXe.length) {
+            try {
+              const res = await fetch('https://localhost:5000/api/products');
+              if (res.ok) allXe = await res.json();
+            } catch {}
+          }
+          renderXe(currentCat);
+        }
+
+        function filterStore(cat, el) {
+          document.querySelectorAll('.std-tab').forEach(t => t.classList.remove('active'));
+          el.classList.add('active');
+          currentCat = cat;
+          renderXe(cat);
+        }
+
+        function renderXe(cat) {
+          const grid = document.getElementById('xeGrid');
+          const count = document.getElementById('xeCount');
+          const filtered = allXe.filter(x => x.category === cat);
+
+          count.textContent = filtered.length + ' mẫu xe';
+
+          if (!filtered.length) {
+            grid.innerHTML = '<div class="std-empty"><i class="fas fa-motorcycle"></i><p>Chưa có xe trong danh mục này</p></div>';
+            return;
+          }
+
+          grid.innerHTML = filtered.map(xe => `
+            <a href="/Products/Detail/${xe.id}" class="std-xe-card">
+              <div class="std-xe-img">
+                <img src="/api-images/${xe.image}" alt="${xe.name}"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f9fafb%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
+              </div>
+              <div class="std-xe-body">
+                <div class="std-xe-name">${xe.name}</div>
+                <div class="std-xe-price">${Number(xe.price).toLocaleString('vi-VN')}đ</div>
+                <div class="std-xe-arrow"><i class="fas fa-arrow-right"></i></div>
+              </div>
+            </a>
+          `).join('');
+        }
+
+        loadXe();
+    </script>
+}

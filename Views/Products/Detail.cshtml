@@ -1,0 +1,291 @@
+﻿@model VinfastWeb.Models.Motorbike
+@{
+    ViewData["Title"] = Model.Name;
+    var colors = new[] {
+        new { Name = "Trắng Ngọc",  Hex = "#F5F5F0", Border = "#d1d5db" },
+        new { Name = "Xanh Navy",   Hex = "#1a2540", Border = "#1a2540" },
+        new { Name = "Đỏ Cánh Sen", Hex = "#C0392B", Border = "#C0392B" },
+        new { Name = "Xanh Rêu",   Hex = "#4a5e3a", Border = "#4a5e3a" },
+    };
+    var specs = Model.Category switch
+    {
+        "pho_thong" => new[] { ("200km", "1 lần sạc"), ("68km/h", "Tối đa"), ("LFP", "Pin an toàn") },
+        "trung_cap" => new[] { ("150km", "1 lần sạc"), ("85km/h", "Tối đa"), ("NMC", "Pin cao cấp") },
+        "cao_cap" => new[] { ("120km", "1 lần sạc"), ("100km/h", "Tối đa"), ("NMC+", "Pin siêu cao cấp") },
+        _ => new[] { ("150km", "1 lần sạc"), ("80km/h", "Tối đa"), ("LFP", "Pin an toàn") }
+    };
+}
+
+<!-- BREADCRUMB -->
+<div class="dt-breadcrumb-bar">
+    <div class="container">
+        <nav class="pd-breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="/Products">Xe Máy Điện</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="/Products?category=@Model.Category">
+                @(Model.Category == "pho_thong" ? "Phổ Thông" : Model.Category == "trung_cap" ? "Trung Cấp" : "Cao Cấp")
+            </a>
+            <i class="fas fa-chevron-right"></i>
+            <span>@Model.Name</span>
+        </nav>
+    </div>
+</div>
+
+<!-- DETAIL LAYOUT -->
+<section class="dt-section">
+    <div class="container">
+        <div class="dt-layout">
+
+            <!-- LEFT: ảnh -->
+            <div class="dt-left">
+                <div class="dt-img-main">
+                    <img src="@Model.ImageUrl" alt="@Model.Name" id="mainImg"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
+                </div>
+                <!-- Thumbnails (dùng cùng ảnh, demo UI) -->
+                <div class="dt-thumbnails">
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        <div class="dt-thumb @(i == 0 ? "active" : "")" onclick="selectThumb(this)">
+                            <img src="@Model.ImageUrl" alt="@Model.Name thumb @(i + 1)" />
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- RIGHT: info -->
+            <div class="dt-right">
+
+                <!-- Category tag -->
+                <div class="dt-tag">
+                    @(Model.Category == "pho_thong" ? "Xe Phổ Thông" :
+                                        Model.Category == "trung_cap" ? "Xe Trung Cấp" : "Xe Cao Cấp")
+                </div>
+
+                <!-- Tên xe -->
+                <h1 class="dt-name">@Model.Name</h1>
+
+                <!-- Rating -->
+                <div class="dt-rating">
+                    <div class="dt-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <span class="dt-rating-num">4.7</span>
+                    <span class="dt-rating-count">(512 đánh giá)</span>
+                    <span class="dt-divider">|</span>
+                    <span class="dt-stock"><i class="fas fa-check-circle"></i> Còn hàng</span>
+                </div>
+
+                <!-- Giá -->
+                <div class="dt-price-wrap">
+                    <div class="dt-price">@Model.FormattedPrice</div>
+                    <div class="dt-price-note">Giá niêm yết chính hãng · Chưa bao gồm phí trước bạ</div>
+                </div>
+
+                <!-- Mô tả ngắn -->
+                <p class="dt-desc">
+                    @Model.Name là mẫu xe điện chính hãng VinFast, cân bằng hoàn hảo giữa giá cả,
+                    tầm hoạt động và thiết kế hiện đại. Phù hợp cho di chuyển đô thị hàng ngày.
+                </p>
+
+                <!-- Thông số kỹ thuật nổi bật -->
+                <div class="dt-specs-row">
+                    @foreach (var spec in specs)
+                    {
+                        <div class="dt-spec-box">
+                            <div class="dt-spec-val">@spec.Item1</div>
+                            <div class="dt-spec-label">@spec.Item2</div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Chọn màu -->
+                <div class="dt-option-group">
+                    <div class="dt-option-label">
+                        Màu sắc: <strong id="colorName">@colors[0].Name</strong>
+                    </div>
+                    <div class="dt-color-list">
+                        @for (int i = 0; i < colors.Length; i++)
+                        {
+                            var c = colors[i];
+                            <button class="dt-color-btn @(i == 0 ? "active" : "")"
+                                    style="background:@c.Hex;border-color:@c.Border"
+                                    onclick="selectColor(this, '@c.Name')"
+                                    title="@c.Name">
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Số lượng -->
+                <div class="dt-option-group">
+                    <div class="dt-option-label">Số lượng</div>
+                    <div class="dt-qty-wrap">
+                        <button class="dt-qty-btn" onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
+                        <span class="dt-qty-val" id="qtyVal">1</span>
+                        <button class="dt-qty-btn" onclick="changeQty(1)"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="dt-actions">
+                    <button class="dt-btn-cart" onclick="addToCartDetail()">
+                        <i class="fas fa-shopping-bag"></i> Thêm vào giỏ
+                    </button>
+                    <button class="dt-btn-buy">
+                        <i class="fas fa-tag"></i> Đăng Ký Mua
+                    </button>
+                    <button class="dt-btn-wish" title="Yêu thích">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Badges -->
+                <div class="dt-badges">
+                    <div class="dt-badge"><i class="fas fa-undo"></i> Đổi trả 30 ngày</div>
+                    <div class="dt-badge"><i class="fas fa-shield-alt"></i> Bảo hành 3 năm</div>
+                    <div class="dt-badge"><i class="fas fa-truck"></i> Giao hàng toàn quốc</div>
+                </div>
+
+                <!-- Tabs thông tin -->
+                <div class="dt-info-tabs">
+                    <div class="dt-info-tab-header">
+                        <button class="dt-itab active" onclick="switchTab(this,'tab-features')">Tính Năng</button>
+                        <button class="dt-itab" onclick="switchTab(this,'tab-specs')">Thông Số</button>
+                        <button class="dt-itab" onclick="switchTab(this,'tab-warranty')">Bảo Hành</button>
+                    </div>
+
+                    <div class="dt-itab-content active" id="tab-features">
+                        <div class="dt-accordion">
+                            <div class="dt-acc-item open">
+                                <div class="dt-acc-head" onclick="toggleAcc(this)">
+                                    <span>Ưu Điểm Nổi Bật</span>
+                                    <i class="fas fa-minus"></i>
+                                </div>
+                                <div class="dt-acc-body">
+                                    <ul class="dt-feature-list">
+                                        <li><i class="fas fa-check"></i> Động cơ điện công suất cao, vận hành êm ái</li>
+                                        <li><i class="fas fa-check"></i> Pin LFP an toàn, tuổi thọ lên đến 2.000 chu kỳ</li>
+                                        <li><i class="fas fa-check"></i> Kết nối smartphone qua ứng dụng VinFast</li>
+                                        <li><i class="fas fa-check"></i> Chống nước chuẩn IP67, bền bỉ mọi thời tiết</li>
+                                        <li><i class="fas fa-check"></i> Cốp xe rộng rãi, chứa được mũ bảo hiểm</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="dt-acc-item">
+                                <div class="dt-acc-head" onclick="toggleAcc(this)">
+                                    <span>Cách Sạc Xe</span>
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="dt-acc-body">
+                                    <p>Sạc tại nhà bằng bộ sạc đi kèm (220V), thời gian sạc đầy khoảng 4-6 giờ. Hỗ trợ sạc nhanh tại các trạm sạc VinFast.</p>
+                                </div>
+                            </div>
+                            <div class="dt-acc-item">
+                                <div class="dt-acc-head" onclick="toggleAcc(this)">
+                                    <span>Chính Sách Giao Hàng</span>
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="dt-acc-body">
+                                    <p>Giao hàng trong 3-7 ngày làm việc. Hỗ trợ đặt cọc trực tuyến, nhận xe tại showroom hoặc giao tận nơi.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dt-itab-content" id="tab-specs">
+                        <table class="dt-spec-table">
+                            <tr><td>Loại xe</td><td>Xe máy điện</td></tr>
+                            <tr><td>Phân khúc</td><td>@(Model.Category == "pho_thong" ? "Phổ Thông" : Model.Category == "trung_cap" ? "Trung Cấp" : "Cao Cấp")</td></tr>
+                            <tr><td>Tầm hoạt động</td><td>@specs[0].Item1 (@specs[0].Item2)</td></tr>
+                            <tr><td>Tốc độ tối đa</td><td>@specs[1].Item1</td></tr>
+                            <tr><td>Loại pin</td><td>@specs[2].Item1 — @specs[2].Item2</td></tr>
+                            <tr><td>Thời gian sạc</td><td>4 – 6 giờ (220V)</td></tr>
+                            <tr><td>Trọng lượng</td><td>~95 kg</td></tr>
+                            <tr><td>Kết nối</td><td>Bluetooth, App VinFast</td></tr>
+                            <tr><td>Chống nước</td><td>IP67</td></tr>
+                            <tr><td>Màu sắc</td><td>4 tùy chọn</td></tr>
+                        </table>
+                    </div>
+
+                    <div class="dt-itab-content" id="tab-warranty">
+                        <div class="dt-warranty-list">
+                            <div class="dt-warranty-item">
+                                <div class="dt-warranty-icon"><i class="fas fa-shield-alt"></i></div>
+                                <div>
+                                    <strong>Bảo hành xe 3 năm hoặc 30.000 km</strong>
+                                    <p>Áp dụng cho tất cả các lỗi kỹ thuật từ nhà sản xuất</p>
+                                </div>
+                            </div>
+                            <div class="dt-warranty-item">
+                                <div class="dt-warranty-icon"><i class="fas fa-battery-full"></i></div>
+                                <div>
+                                    <strong>Bảo hành pin 8 năm hoặc 160.000 km</strong>
+                                    <p>Cam kết dung lượng pin còn tối thiểu 70% sau thời gian bảo hành</p>
+                                </div>
+                            </div>
+                            <div class="dt-warranty-item">
+                                <div class="dt-warranty-icon"><i class="fas fa-tools"></i></div>
+                                <div>
+                                    <strong>Hỗ trợ kỹ thuật 24/7</strong>
+                                    <p>Hotline 1800 599 961, cứu hộ toàn quốc trong 2 giờ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const productId   = @Model.Id;
+        const productName = '@Model.Name.Replace("'", "\\'")';
+        const productPrice= @Model.Price;
+        const productImg  = '@Model.Image';
+        let   qty         = 1;
+        let   chosenColor = '@colors[0].Name';
+
+        function changeQty(d) {
+          qty = Math.max(1, qty + d);
+          document.getElementById('qtyVal').textContent = qty;
+        }
+        function selectColor(btn, name) {
+          document.querySelectorAll('.dt-color-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          chosenColor = name;
+          document.getElementById('colorName').textContent = name;
+        }
+        function selectThumb(el) {
+          document.querySelectorAll('.dt-thumb').forEach(t => t.classList.remove('active'));
+          el.classList.add('active');
+        }
+        function addToCartDetail() {
+          addToCart(productId, 'motorbike', productName + ' - ' + chosenColor, productPrice, productImg);
+        }
+        function switchTab(btn, tabId) {
+          document.querySelectorAll('.dt-itab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.dt-itab-content').forEach(t => t.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(tabId).classList.add('active');
+        }
+        function toggleAcc(head) {
+          const item = head.closest('.dt-acc-item');
+          const isOpen = item.classList.contains('open');
+          document.querySelectorAll('.dt-acc-item').forEach(i => {
+            i.classList.remove('open');
+            i.querySelector('i').className = 'fas fa-plus';
+          });
+          if (!isOpen) {
+            item.classList.add('open');
+            head.querySelector('i').className = 'fas fa-minus';
+          }
+        }
+    </script>
+}

@@ -7,10 +7,7 @@
         public long Price { get; set; }
         public string Image { get; set; } = "";
         public string Category { get; set; } = "";
-
-        public string FormattedPrice =>
-            Price.ToString("N0").Replace(",", ".") + "đ";
-
+        public string FormattedPrice => Price.ToString("N0").Replace(",", ".") + "đ";
         public string ImageUrl => $"/api-images/motorbike/{System.IO.Path.GetFileName(Image)}";
     }
 
@@ -21,10 +18,7 @@
         public long Price { get; set; }
         public string Image { get; set; } = "";
         public string Category { get; set; } = "";
-
-        public string FormattedPrice =>
-            Price.ToString("N0").Replace(",", ".") + "đ";
-
+        public string FormattedPrice => Price.ToString("N0").Replace(",", ".") + "đ";
         public string ImageUrl => $"/api-images/car/{System.IO.Path.GetFileName(Image)}";
     }
 
@@ -35,10 +29,7 @@
         public long Price { get; set; }
         public string Image { get; set; } = "";
         public string Category { get; set; } = "";
-
-        public string FormattedPrice =>
-            Price.ToString("N0").Replace(",", ".") + "đ";
-
+        public string FormattedPrice => Price.ToString("N0").Replace(",", ".") + "đ";
         public string ImageUrl => $"/api-images/accessory/{System.IO.Path.GetFileName(Image)}";
     }
 
@@ -46,12 +37,13 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = "";
-        public decimal Rating { get; set; }
+        public string Rating { get; set; } = "0";
         public string Address { get; set; } = "";
         public string Image { get; set; } = "";
         public string Route { get; set; } = "";
-
-        public string ImageUrl => $"/api-images/store/{System.IO.Path.GetFileName(Image)}";
+        public string ImageUrl => $"/api-images/store/{System.IO.Path.GetFileName(Image ?? "")}";
+        public decimal RatingDecimal => decimal.TryParse(Rating, out var r) ? r : 0;
+        public int RatingInt => (int)RatingDecimal;
     }
 
     public class Voucher
@@ -62,8 +54,7 @@
         public string Code { get; set; } = "";
         public string Image { get; set; } = "";
         public DateTime CreatedAt { get; set; }
-
-        public string ImageUrl => $"/api-images/voucher/{System.IO.Path.GetFileName(Image)}";
+        public string ImageUrl => $"/api-images/voucher/{System.IO.Path.GetFileName(Image ?? "")}";
     }
 
     public class User
@@ -77,12 +68,11 @@
     public class CartItem
     {
         public int ProductId { get; set; }
-        public string ProductType { get; set; } = ""; // motorbike / car / accessory
+        public string ProductType { get; set; } = "";
         public string Name { get; set; } = "";
         public long Price { get; set; }
         public string Image { get; set; } = "";
         public int Quantity { get; set; }
-
         public long Total => Price * Quantity;
         public string FormattedPrice => Price.ToString("N0").Replace(",", ".") + "đ";
         public string FormattedTotal => Total.ToString("N0").Replace(",", ".") + "đ";

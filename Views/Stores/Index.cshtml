@@ -1,0 +1,94 @@
+﻿@model List<VinfastWeb.Models.Store>
+@{
+    ViewData["Title"] = "Hệ Thống Showroom";
+}
+
+<!-- HEADER -->
+<div class="pd-header">
+    <div class="container">
+        <nav class="pd-breadcrumb">
+            <a href="/">Trang chủ</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Showroom</span>
+        </nav>
+        <h1 class="pd-header-title">Hệ Thống Showroom VinFast</h1>
+        <p class="pd-header-sub">@Model.Count cửa hàng tại Hà Nội — Lái thử miễn phí, tư vấn tận tâm</p>
+    </div>
+</div>
+
+<!-- STORE LIST -->
+<section class="st-section">
+    <div class="container">
+
+        <!-- Info banner -->
+        <div class="st-info-banner">
+            <div class="st-info-item">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <strong>Giờ Làm Việc</strong>
+                    <span>Thứ 2 – Thứ 6: 08:00 – 20:00<br>Thứ 7: 08:00 – 18:00</span>
+                </div>
+            </div>
+            <div class="st-info-item">
+                <i class="fas fa-phone-alt"></i>
+                <div>
+                    <strong>Hotline</strong>
+                    <span>1800 599 961 (Miễn phí)</span>
+                </div>
+            </div>
+            <div class="st-info-item">
+                <i class="fas fa-car"></i>
+                <div>
+                    <strong>Lái Thử Miễn Phí</strong>
+                    <span>Đặt lịch trước hoặc đến trực tiếp</span>
+                </div>
+            </div>
+            <div class="st-info-item">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>Bảo Hành Chính Hãng</strong>
+                    <span>3 năm hoặc 50.000 km</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store grid -->
+        <div class="st-grid">
+            @foreach (var store in Model)
+            {
+                <a href="/Stores/Detail/@store.Id" class="st-card">
+                    <div class="st-card-img">
+                        <img src="@store.ImageUrl" alt="@store.Name" loading="lazy"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
+                        <div class="st-card-overlay">
+                            <div class="st-card-name">@store.Name</div>
+                        </div>
+                    </div>
+                    <div class="st-card-body">
+                        <div class="st-card-meta">
+                            <span class="st-card-rating">
+                                <i class="fas fa-star"></i> @store.Rating
+                            </span>
+                            <span class="st-card-hours">
+                                <i class="fas fa-clock"></i> 08:00 – 20:00
+                            </span>
+                        </div>
+                        <div class="st-card-addr">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>@store.Address</span>
+                        </div>
+                        <div class="st-card-tags">
+                            <span class="st-tag">Xe Máy Điện</span>
+                            <span class="st-tag">Ô Tô</span>
+                            <span class="st-tag">Bảo Hành</span>
+                        </div>
+                    </div>
+                    <div class="st-card-footer">
+                        <span>Xem chi tiết</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</section>

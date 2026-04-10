@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VinfastWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+89a40cc6d5146ebcc3c36a4bd6874e574c457fa6")]
 [assembly: System.Reflection.AssemblyProductAttribute("VinfastWeb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VinfastWeb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

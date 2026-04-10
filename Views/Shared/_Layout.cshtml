@@ -26,9 +26,15 @@
         <div class="vf-nav-inner">
 
             <!-- LOGO (TODO: thay bang logo chinh hang VinFast) -->
+            <!-- Logo VinFast - dùng ảnh từ backend qua proxy -->
             <a href="/" class="vf-logo">
-                <span class="vf-logo-icon">VF</span>
-                <span class="vf-logo-name">VinFast</span>
+                <img src="/api-images/vinfast_home.png"
+                     alt="VinFast Logo" class="vf-logo-img"
+                     onerror="this.style.display='none';document.getElementById('vfLogoFallback').style.display='flex'" />
+                <span id="vfLogoFallback" style="display:none;align-items:center;gap:8px">
+                    <span class="vf-logo-icon">VF</span>
+                    <span class="vf-logo-name">VinFast</span>
+                </span>
             </a>
 
             <!-- NAV LINKS -->

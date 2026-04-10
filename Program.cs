@@ -22,29 +22,42 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpClient<ApiService>();
-builder.Services.AddScoped<CartService>();
+
+// HttpClient cho ApiService - cho phep goi HTTP tu HTTPS app
+builder.Services.AddHttpClient<ApiService>().ConfigurePrimaryHttpMessageHandler(() =>
+    new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
+// HttpClient chung cho proxy anh
+builder.Services.AddHttpClient("proxy").ConfigurePrimaryHttpMessageHandler(() =>
+    new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<CartService>();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+app.UseDeveloperExceptionPage();
+// app.UseHttpsRedirection(); // Tat khi dev
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/api-images/{**path}", async (string path, IConfiguration config, IHttpClientFactory httpFactory, HttpContext ctx) =>
+// Proxy anh tu Node.js backend
+app.MapGet("/api-images/{**path}", async (string path, IConfiguration config, IHttpClientFactory httpFactory) =>
 {
     var baseUrl = config["ApiSettings:BaseUrl"] ?? "http://localhost:5000";
-    var http = httpFactory.CreateClient();
+    var http = httpFactory.CreateClient("proxy");
     try
     {
         var bytes = await http.GetByteArrayAsync($"{baseUrl}/images/{path}");

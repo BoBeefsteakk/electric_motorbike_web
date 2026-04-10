@@ -5,6 +5,7 @@ namespace VinfastWeb.ViewModels
     public class HomeViewModel
     {
         public List<Motorbike> FeaturedMotorbikes { get; set; } = new();
+        public List<Car> FeaturedCars { get; set; } = new();
         public List<Store> Stores { get; set; } = new();
         public List<Voucher> Vouchers { get; set; } = new();
     }
