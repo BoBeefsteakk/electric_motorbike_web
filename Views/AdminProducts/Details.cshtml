@@ -1,0 +1,92 @@
+﻿@model VinfastWeb.Models.AdminProduct
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+<div class="admin-page">
+    <div class="admin-shell">
+        <div class="admin-details-card">
+            <div class="admin-form-head">
+                <div>
+                    <div class="admin-badge">CHI TIẾT</div>
+                    <h1 class="admin-title admin-title-sm">Thông tin sản phẩm</h1>
+                    <p class="admin-subtitle">Xem đầy đủ thông tin của bản ghi đang chọn.</p>
+                </div>
+
+                <div class="admin-head-actions">
+                    <a asp-action="Edit" asp-route-id="@Model.ProductID" class="admin-btn admin-btn-primary">Chỉnh sửa</a>
+                    <a asp-action="Index" class="admin-btn admin-btn-light">Quay lại danh sách</a>
+                </div>
+            </div>
+
+            <div class="admin-details-grid">
+                <div class="admin-details-image-box">
+                    <img src="@Model.ImageUrl" alt="@Model.ProductName" class="admin-details-image" />
+                </div>
+
+                <div class="admin-details-info">
+                    <div class="admin-detail-item">
+                        <span class="admin-detail-label">Mã sản phẩm</span>
+                        <div class="admin-detail-value">#@Model.ProductID</div>
+                    </div>
+
+                    <div class="admin-detail-item">
+                        <span class="admin-detail-label">Tên sản phẩm</span>
+                        <div class="admin-detail-value">@Model.ProductName</div>
+                    </div>
+
+                    <div class="admin-detail-item">
+                        <span class="admin-detail-label">Loại sản phẩm</span>
+                        <div class="admin-detail-value">
+                            <span class="admin-pill @(Model.ProductType == "Ô tô" ? "car" : "bike")">
+                                @Model.ProductType
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="admin-detail-item">
+                        <span class="admin-detail-label">Số lượng</span>
+                        <div class="admin-detail-value">@Model.Quantity</div>
+                    </div>
+
+                    <div class="admin-detail-item">
+                        <span class="admin-detail-label">Đơn vị</span>
+                        <div class="admin-detail-value">@Model.Unit</div>
+                    </div>
+
+                    <div class="admin-detail-item">
+                        <span class="admin-detail-label">Giá</span>
+                        <div class="admin-detail-value admin-price">@Model.FormattedPrice</div>
+                    </div>
+
+                    <div class="admin-detail-item">
+                        <span class="admin-detail-label">Ngày tạo</span>
+                        <div class="admin-detail-value">@(Model.CreateDate?.ToString("dd/MM/yyyy") ?? "--")</div>
+                    </div>
+
+                    <div class="admin-detail-item">
+                        <span class="admin-detail-label">Ngày sửa</span>
+                        <div class="admin-detail-value">@(Model.UpdateDate?.ToString("dd/MM/yyyy") ?? "--")</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-description-card">
+                <h3>Mô tả sản phẩm</h3>
+                <p>@(string.IsNullOrWhiteSpace(Model.Description) ? "Chưa có mô tả." : Model.Description)</p>
+            </div>
+
+            <div class="admin-form-footer">
+                <a asp-action="Edit" asp-route-id="@Model.ProductID" class="admin-btn admin-btn-primary">Sửa ngay</a>
+
+                <form asp-action="Delete" asp-route-id="@Model.ProductID" method="post" class="admin-inline-form">
+                    <button type="submit"
+                            class="admin-btn admin-btn-danger"
+                            onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                        Xóa sản phẩm
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

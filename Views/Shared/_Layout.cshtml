@@ -127,6 +127,7 @@
                 <a href="/Search" class="vf-nav-icon" title="Tìm kiếm">
                     <i class="fas fa-search"></i>
                 </a>
+
                 <a href="/Cart" class="vf-nav-icon" title="Giỏ hàng">
                     <i class="fas fa-shopping-bag"></i>
                     <span class="vf-cart-badge" id="cartBadge" style="display:none">0</span>
@@ -135,12 +136,26 @@
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <div class="vf-nav-item has-drop">
-                        <a href="/Profile" class="vf-nav-link" style="display:flex;align-items:center;gap:6px">
-                            <i class="fas fa-user-circle"></i> @User.Identity.Name
+                        <a href="javascript:void(0)" class="vf-nav-link" style="display:flex;align-items:center;gap:6px">
+                            <i class="fas fa-user-circle"></i> @User.Identity?.Name
+                            <i class="fas fa-chevron-down"></i>
                         </a>
+
                         <div class="vf-dropdown vf-dropdown-right">
-                            <a href="/Profile"><i class="fas fa-user"></i> Hồ Sơ Của Tôi</a>
-                            <a href="/Auth/Logout"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                            @if (User.IsInRole("admin"))
+                            {
+                                <a asp-controller="AdminProducts" asp-action="Index">
+                                    <i class="fas fa-cog"></i> Quản lý sản phẩm
+                                </a>
+                            }
+
+                            <a href="/Profile">
+                                <i class="fas fa-user"></i> Hồ Sơ Của Tôi
+                            </a>
+
+                            <a href="/Auth/Logout">
+                                <i class="fas fa-sign-out-alt"></i> Đăng Xuất
+                            </a>
                         </div>
                     </div>
                 }
@@ -149,9 +164,9 @@
                     <a href="/Auth/Login" class="vf-signin-btn">
                         <i class="fas fa-user"></i> Đăng Nhập
                     </a>
-                }
 
-                <a href="/Auth/Register" class="vf-submit-btn">Đăng Ký</a>
+                    <a href="/Auth/Register" class="vf-submit-btn">Đăng Ký</a>
+                }
 
                 <button class="vf-hamburger" id="hamburger">
                     <span></span><span></span><span></span>

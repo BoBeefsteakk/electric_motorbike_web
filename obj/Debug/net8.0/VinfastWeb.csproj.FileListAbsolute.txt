@@ -7,6 +7,12 @@ D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\VinfastWeb.deps.json
 D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\VinfastWeb.runtimeconfig.json
 D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\VinfastWeb.dll
 D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\VinfastWeb.pdb
+D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\wpf source\VinfastWeb.csproj\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.csproj.AssemblyReference.cache
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\rpswa.dswa.cache.json
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.GeneratedMSBuildEditorConfig.editorconfig
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.AssemblyInfoInputs.cache
@@ -27,6 +33,7 @@ D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\staticwebassets.build.json.cach
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\staticwebassets.development.json
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.csproj.Up2Date
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.dll
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\refint\VinfastWeb.dll
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.pdb

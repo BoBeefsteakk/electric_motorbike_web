@@ -1,0 +1,300 @@
+﻿@model VinfastWeb.ViewModels.AdminProductListViewModel
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+}
+
+<div class="admin-page">
+    <div class="admin-shell">
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="admin-alert admin-alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="admin-alert admin-alert-error">
+                @TempData["Error"]
+            </div>
+        }
+
+        <div class="admin-toolbar-card">
+            <div class="admin-toolbar-top">
+                <div>
+                    <div class="admin-badge">DANH SÁCH</div>
+                    <h1 class="admin-title">Quản lý sản phẩm</h1>
+                    <p class="admin-subtitle">
+                        Quản trị dữ liệu sản phẩm, chỉnh sửa và phân loại theo hệ thống mới.
+                    </p>
+                </div>
+
+                <div class="admin-shortcuts">
+                    <span>Alt + H tìm kiếm</span>
+                    <span>Alt + N thêm mới</span>
+                    <span>Alt + S gửi form</span>
+                    <span>Alt + E xuất JSON</span>
+                </div>
+            </div>
+
+            <form method="get" asp-action="Index" class="admin-filter-form" id="adminFilterForm">
+                <div class="admin-filter-grid">
+                    <div class="admin-field admin-field-grow">
+                        <label for="keyword">Tìm kiếm theo tên, mã, mô tả</label>
+                        <input id="keyword"
+                               name="keyword"
+                               type="text"
+                               value="@Model.Keyword"
+                               placeholder="Nhập tên, mã, mô tả..." />
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="productType">Loại sản phẩm</label>
+                        <select id="productType" name="productType">
+                            <option value="">Tất cả</option>
+                            <option value="Phổ thông" selected="@(Model.ProductType == "Phổ thông")">Phổ thông</option>
+                            <option value="Trung cấp" selected="@(Model.ProductType == "Trung cấp")">Trung cấp</option>
+                            <option value="Cao cấp" selected="@(Model.ProductType == "Cao cấp")">Cao cấp</option>
+                            <option value="Ô tô" selected="@(Model.ProductType == "Ô tô")">Ô tô</option>
+                            <option value="Phụ kiện" selected="@(Model.ProductType == "Phụ kiện")">Phụ kiện</option>
+                            <option value="Showroom" selected="@(Model.ProductType == "Showroom")">Showroom</option>
+                        </select>
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="pageSize">Số dòng/trang</label>
+                        <select id="pageSize" name="pageSize">
+                            <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                            <option value="15" selected="@(Model.PageSize == 15)">15</option>
+                            <option value="20" selected="@(Model.PageSize == 20)">20</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="admin-type-switch">
+                    <a asp-action="Index"
+                       asp-route-keyword="@Model.Keyword"
+                       asp-route-productType=""
+                       asp-route-pageSize="@Model.PageSize"
+                       class="@(string.IsNullOrWhiteSpace(Model.ProductType) ? "active" : "")">
+                        Tất cả
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-keyword="@Model.Keyword"
+                       asp-route-productType="Phổ thông"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="@(Model.ProductType == "Phổ thông" ? "active" : "")">
+                        Phổ thông
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-keyword="@Model.Keyword"
+                       asp-route-productType="Trung cấp"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="@(Model.ProductType == "Trung cấp" ? "active" : "")">
+                        Trung cấp
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-keyword="@Model.Keyword"
+                       asp-route-productType="Cao cấp"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="@(Model.ProductType == "Cao cấp" ? "active" : "")">
+                        Cao cấp
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-keyword="@Model.Keyword"
+                       asp-route-productType="Ô tô"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="@(Model.ProductType == "Ô tô" ? "active" : "")">
+                        Ô tô
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-keyword="@Model.Keyword"
+                       asp-route-productType="Phụ kiện"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="@(Model.ProductType == "Phụ kiện" ? "active" : "")">
+                        Phụ kiện
+                    </a>
+
+                    <a asp-action="Index"
+                       asp-route-keyword="@Model.Keyword"
+                       asp-route-productType="Showroom"
+                       asp-route-pageSize="@Model.PageSize"
+                       class="@(Model.ProductType == "Showroom" ? "active" : "")">
+                        Showroom
+                    </a>
+                </div>
+
+                <div class="admin-actions-row">
+                    <div class="admin-actions-left">
+                        <button type="submit" class="admin-btn admin-btn-primary">
+                            Tìm kiếm
+                        </button>
+                        <a asp-action="Index" class="admin-btn admin-btn-light">Reset</a>
+                    </div>
+
+                    <div class="admin-actions-right">
+                        <a asp-action="Create" class="admin-btn admin-btn-light">Thêm mới</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="admin-list-card">
+            <div class="admin-list-header">
+                <div>
+                    <h2>Danh sách bản ghi</h2>
+                    <p>@Model.TotalItems bản ghi</p>
+                </div>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table admin-table-clean">
+                    <thead>
+                        <tr>
+                            <th class="col-id">#</th>
+                            <th class="col-image">Ảnh</th>
+                            <th class="col-name">Tên</th>
+                            <th class="col-type">Loại</th>
+                            <th class="col-qty">Số lượng</th>
+                            <th class="col-price">Giá</th>
+                            <th class="col-date">Ngày</th>
+                            <th class="col-action">Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model.Items == null || !Model.Items.Any())
+                        {
+                            <tr>
+                                <td colspan="8">
+                                    <div class="admin-empty">Không có dữ liệu</div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td class="col-id">
+                                        <span class="admin-code">#@item.ProductID</span>
+                                    </td>
+
+                                    <td class="col-image">
+                                        <img class="admin-thumb"
+                                             src="@item.ImageUrl"
+                                             alt="@item.ProductName"
+                                             onerror="this.onerror=null;this.src='/images/no-image.png';" />
+                                    </td>
+
+                                    <td class="col-name">
+                                        <div class="admin-product-cell">
+                                            <div class="admin-product-name">@item.ProductName</div>
+                                            <div class="admin-product-desc">@item.Description</div>
+                                        </div>
+                                    </td>
+
+                                    <td class="col-type">
+                                        <span class="admin-pill">
+                                            @item.CategoryGroup
+                                        </span>
+                                    </td>
+
+                                    <td class="col-qty">
+                                        @item.Quantity
+                                    </td>
+
+                                    <td class="col-price">
+                                        <span class="admin-price-value">@item.FormattedPrice</span>
+                                    </td>
+
+                                    <td class="col-date">
+                                        @(item.UpdateDate?.ToString("dd/MM/yyyy") ?? "--")
+                                    </td>
+
+                                    <td class="col-action">
+                                        <div class="admin-row-actions">
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.ProductID"
+                                               class="admin-btn admin-btn-row">
+                                                Xem
+                                            </a>
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@item.ProductID"
+                                               class="admin-btn admin-btn-row">
+                                                Sửa
+                                            </a>
+
+                                            <a asp-action="Duplicate"
+                                               asp-route-id="@item.ProductID"
+                                               class="admin-btn admin-btn-row">
+                                                Copy
+                                            </a>
+
+                                            <form asp-action="Delete"
+                                                  asp-route-id="@item.ProductID"
+                                                  method="post"
+                                                  class="admin-inline-form">
+                                                <button type="submit"
+                                                        class="admin-btn admin-btn-danger admin-btn-row"
+                                                        onclick="return confirm('Xóa bản ghi này?')">
+                                                    Xóa
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <div class="admin-pagination">
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <a asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-keyword="@Model.Keyword"
+                           asp-route-productType="@Model.ProductType"
+                           asp-route-pageSize="@Model.PageSize"
+                           class="@(Model.Page == i ? "active" : "")">
+                            @i
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('keydown', function (e) {
+            if (e.altKey && (e.key === 'h' || e.key === 'H')) {
+                e.preventDefault();
+                document.getElementById('keyword')?.focus();
+            }
+
+            if (e.altKey && (e.key === 'n' || e.key === 'N')) {
+                e.preventDefault();
+                const addBtn = document.querySelector('a[href*="/AdminProducts/Create"]');
+                if (addBtn) window.location.href = addBtn.href;
+            }
+
+            if (e.altKey && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                document.getElementById('adminFilterForm')?.submit();
+            }
+        });
+    </script>
+}

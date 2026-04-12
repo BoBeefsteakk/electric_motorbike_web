@@ -1,0 +1,121 @@
+﻿@model VinfastWeb.Models.AdminProduct
+@{
+    ViewData["Title"] = "Chỉnh sửa sản phẩm";
+}
+
+<div class="admin-page">
+    <div class="admin-shell">
+        <div class="admin-form-card">
+            <div class="admin-form-head">
+                <div>
+                    <div class="admin-badge">CHỈNH SỬA</div>
+                    <h1 class="admin-title admin-title-sm">Cập nhật sản phẩm</h1>
+                    <p class="admin-subtitle">Chỉnh sửa dữ liệu cho từng bản ghi.</p>
+                </div>
+
+                <div class="admin-head-actions">
+                    <a asp-action="Details" asp-route-id="@Model.ProductID" class="admin-btn admin-btn-light">Xem chi tiết</a>
+                    <a asp-action="Index" class="admin-btn admin-btn-light">Quay lại</a>
+                </div>
+            </div>
+
+            <form asp-action="Edit" method="post" class="admin-edit-form">
+                <input asp-for="ProductID" type="hidden" />
+
+                <div class="admin-form-grid">
+                    <div class="admin-form-section">
+                        <h3>Thông tin cơ bản</h3>
+
+                        <div class="admin-field">
+                            <label>Mã sản phẩm</label>
+                            <input value="@Model.ProductID" disabled />
+                        </div>
+
+                        <div class="admin-field">
+                            <label asp-for="ProductName">Tên sản phẩm</label>
+                            <input asp-for="ProductName" placeholder="Nhập tên sản phẩm" />
+                            <span asp-validation-for="ProductName" class="text-danger"></span>
+                        </div>
+
+                        <div class="admin-field">
+                            <label asp-for="Description">Mô tả</label>
+                            <textarea asp-for="Description" rows="6" placeholder="Nhập mô tả sản phẩm"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="admin-field">
+                            <label asp-for="PathImage">Ảnh sản phẩm</label>
+                            <input asp-for="PathImage" placeholder="/images/xe.jpg hoặc url ảnh" />
+                            <span asp-validation-for="PathImage" class="text-danger"></span>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+                        {
+                            <div class="admin-preview-box">
+                                <div class="admin-preview-label">Xem trước ảnh</div>
+                                <img src="@Model.ImageUrl" alt="@Model.ProductName" class="admin-preview-image" />
+                            </div>
+                        }
+                    </div>
+
+                    <div class="admin-form-section">
+                        <h3>Phân loại & giá</h3>
+
+                        <div class="admin-field">
+                            <label asp-for="ProductType">Loại sản phẩm</label>
+                            <select asp-for="ProductType">
+                                <option value="">-- Chọn loại --</option>
+                                <option value="Xe máy">Xe máy</option>
+                                <option value="Ô tô">Ô tô</option>
+                            </select>
+                            <span asp-validation-for="ProductType" class="text-danger"></span>
+                        </div>
+
+                        <div class="admin-form-row-2">
+                            <div class="admin-field">
+                                <label asp-for="Quantity">Số lượng</label>
+                                <input asp-for="Quantity" type="number" min="0" />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
+                            </div>
+
+                            <div class="admin-field">
+                                <label asp-for="Unit">Đơn vị</label>
+                                <input asp-for="Unit" placeholder="chiếc" />
+                                <span asp-validation-for="Unit" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="admin-field">
+                            <label asp-for="Price">Giá</label>
+                            <input asp-for="Price" type="number" min="0" step="1000" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="admin-form-row-2">
+                            <div class="admin-field">
+                                <label asp-for="CreateDate">Ngày tạo</label>
+                                <input asp-for="CreateDate" type="date" />
+                                <span asp-validation-for="CreateDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="admin-field">
+                                <label asp-for="UpdateDate">Ngày sửa</label>
+                                <input asp-for="UpdateDate" type="date" />
+                                <span asp-validation-for="UpdateDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-form-footer">
+                    <a asp-action="Index" class="admin-btn admin-btn-light">Hủy</a>
+                    <button type="submit" class="admin-btn admin-btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

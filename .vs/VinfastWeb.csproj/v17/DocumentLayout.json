@@ -3,20 +3,56 @@
   "WorkspaceRootPath": "D:\\wpf source\\VinfastWeb.csproj\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\views\\adminproducts\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:views\\adminproducts\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\views\\stores\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:views\\stores\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\models\\adminproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:models\\adminproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\services\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:services\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\controllers\\adminproductscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:controllers\\adminproductscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\views\\adminproducts\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:views\\adminproducts\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\viewmodels\\adminproductlistviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:viewmodels\\adminproductlistviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\views\\adminproducts\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:views\\adminproducts\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\views\\adminproducts\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:views\\adminproducts\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B9696ECC-22D8-47CB-9E59-2BEDD68668A7}|VinfastWeb.csproj|d:\\wpf source\\vinfastweb.csproj\\models\\models.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,28 +66,145 @@
       "DocumentGroups": [
         {
           "DockedWidth": 663,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Views\\AdminProducts\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\AdminProducts\\Details.cshtml",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Views\\AdminProducts\\Details.cshtml",
+              "RelativeToolTip": "Views\\AdminProducts\\Details.cshtml",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAIwFsAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T01:58:28.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Views\\AdminProducts\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\AdminProducts\\Edit.cshtml",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Views\\AdminProducts\\Edit.cshtml",
+              "RelativeToolTip": "Views\\AdminProducts\\Edit.cshtml",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAIwHgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T01:58:11.499Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Views\\AdminProducts\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\AdminProducts\\Create.cshtml",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Views\\AdminProducts\\Create.cshtml",
+              "RelativeToolTip": "Views\\AdminProducts\\Create.cshtml",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAIwGgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T01:57:51.157Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Views\\AdminProducts\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\AdminProducts\\Index.cshtml",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Views\\AdminProducts\\Index.cshtml",
+              "RelativeToolTip": "Views\\AdminProducts\\Index.cshtml",
+              "ViewState": "AgIAAK8AAAAAAAAAAAD4v8AAAABsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T01:42:01.667Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAJ0AAAAAAAAAAAAqwK0AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-12T01:38:35.811Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
+              "Title": "AdminProductsController.cs",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Controllers\\AdminProductsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminProductsController.cs",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Controllers\\AdminProductsController.cs",
+              "RelativeToolTip": "Controllers\\AdminProductsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGwAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T01:38:16.861Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AdminProductListViewModel.cs",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\ViewModels\\AdminProductListViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\AdminProductListViewModel.cs",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\ViewModels\\AdminProductListViewModel.cs",
+              "RelativeToolTip": "ViewModels\\AdminProductListViewModel.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAA9wBYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T01:35:30.074Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AdminProduct.cs",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Models\\AdminProduct.cs",
+              "RelativeDocumentMoniker": "Models\\AdminProduct.cs",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Models\\AdminProduct.cs",
+              "RelativeToolTip": "Models\\AdminProduct.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T01:34:46.946Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAqwJoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T01:31:34.939Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "site.css",
               "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\site.css",
               "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\wwwroot\\css\\site.css",
               "RelativeToolTip": "wwwroot\\css\\site.css",
-              "ViewState": "AgIAAKIYAAAAAAAAAAAUwLAYAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAP8dAAAAAAAAAAAiwB0eAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2026-04-09T08:29:59.562Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
@@ -64,40 +217,42 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Views\\Stores\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Stores\\Index.cshtml",
               "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Views\\Stores\\Index.cshtml",
               "RelativeToolTip": "Views\\Stores\\Index.cshtml",
-              "ViewState": "AgIAAEQAAAAAAAAAAAAYwF4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAAAYwF8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-04-05T10:09:28.151Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "ApiService.cs",
               "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Services\\ApiService.cs",
               "RelativeDocumentMoniker": "Services\\ApiService.cs",
               "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Services\\ApiService.cs",
               "RelativeToolTip": "Services\\ApiService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAAOUBAAAAAAAAAAAIwPQBAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-04T08:50:43.627Z"
+              "WhenOpened": "2026-04-04T08:50:43.627Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 13,
               "Title": "Models.cs",
               "DocumentMoniker": "D:\\wpf source\\VinfastWeb.csproj\\Models\\Models.cs",
               "RelativeDocumentMoniker": "Models\\Models.cs",
               "ToolTip": "D:\\wpf source\\VinfastWeb.csproj\\Models\\Models.cs",
               "RelativeToolTip": "Models\\Models.cs",
-              "ViewState": "AgIAADgAAAAAAAAAAAAywE8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAADwv08AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-22T08:36:14.195Z"
+              "WhenOpened": "2026-03-22T08:36:14.195Z",
+              "EditorCaption": ""
             }
           ]
         },
