@@ -26,6 +26,7 @@ namespace VinfastWeb.ViewModels
 
     public class CartViewModel
     {
+        public int TotalCount => Items.Sum(i => i.Quantity);
         public List<CartItem> Items { get; set; } = new();
         public long GrandTotal => Items.Sum(i => i.Total);
         public string FormattedGrandTotal => GrandTotal.ToString("N0").Replace(",", ".") + "đ";
@@ -42,9 +43,9 @@ namespace VinfastWeb.ViewModels
 
     public class LoginViewModel
     {
-        public string Account { get; set; } = "";
-        public string Password { get; set; } = "";
-        public string? ErrorMessage { get; set; }
+        public string Account { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string? ErrorMessage { get; set; } // Cái này để null là đúng vì lúc mới vào chưa có lỗi
     }
 
     public class RegisterViewModel

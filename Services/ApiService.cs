@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using VinfastWeb.Models;
+using VinfastWeb.ViewModels;
 
 namespace VinfastWeb.Services
 {
@@ -604,6 +605,38 @@ namespace VinfastWeb.Services
 
             // Nếu DB chỉ lưu tên file
             return $"/images/{folder}/{path.TrimStart('/')}";
+        }
+        public async Task<SearchViewModel> SearchAllAsync(string keyword)
+        {
+            // 1. Nếu từ khóa trống, trả về Model rỗng ngay lập tức
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return new SearchViewModel { Query = "" };
+            }
+
+            try
+            {
+                // 2. Gọi API đến Backend Node.js
+                // Lưu ý: Đường dẫn "/api/search" phải khớp với route mà bạn Backend đã đặt
+                var response = await _http.GetFromJsonAsync<SearchViewModel>(
+                    $"{_baseUrl}/api/search?q={Uri.EscapeDataString(keyword)}"
+                );
+
+                // 3. Trả về kết quả, nếu null thì trả về Model mới để tránh lỗi giao diện
+                if (response != null)
+                {
+                    response.Query = keyword; // Gán lại từ khóa để hiển thị trên View
+                    return response;
+                }
+
+                return new SearchViewModel { Query = keyword };
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi nếu cần và trả về model rỗng để web không bị "văng"
+                Console.WriteLine($"Lỗi tìm kiếm: {ex.Message}");
+                return new SearchViewModel { Query = keyword };
+            }
         }
     }
 }

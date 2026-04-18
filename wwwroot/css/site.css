@@ -7708,3 +7708,262 @@ button {
         min-width: 980px;
     }
 }
+/* Giao diện kết quả tìm kiếm nhỏ gọn */
+/* ====================================
+   GIAO DIỆN TÌM KIẾM MỚI (CHUẨN ĐẸP)
+==================================== */
+.search-dropdown-ui {
+    position: absolute;
+    top: 130%; /* Xổ xuống ngay dưới icon */
+    right: 0;
+    width: 340px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); /* Đổ bóng đậm để nổi bật */
+    z-index: 9999 !important; /* Luôn đè lên trên banner và các ảnh khác */
+    padding: 12px;
+    border: 1px solid #ebebeb;
+}
+
+/* Khung nhập chữ kiểu bo tròn nền xám nhạt (như Facebook/Apple) */
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #f0f2f5;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-bottom: 10px;
+}
+
+    .search-input-wrapper input {
+        border: none;
+        background: transparent;
+        width: 100%;
+        padding: 0 10px;
+        font-size: 0.9rem;
+        outline: none;
+        color: #333;
+    }
+
+.search-clear-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    padding: 0;
+    font-size: 1.1rem;
+}
+
+    .search-clear-btn:hover {
+        color: #dc3545;
+    }
+
+/* Danh sách kết quả */
+/* Khung bọc để thanh search không đẩy các icon khác */
+.search-wrapper-dynamic {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-bar-expandable {
+    position: relative;
+}
+
+/* Thanh nhập liệu bo tròn hiện đại */
+.search-input-box {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1.5px solid #007bff; /* Viền xanh Vinfast */
+    border-radius: 20px;
+    padding: 4px 12px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+    .search-input-box input {
+        border: none;
+        outline: none;
+        padding: 0 8px;
+        font-size: 0.85rem;
+        width: 100%;
+    }
+
+    .search-input-box button {
+        background: none;
+        border: none;
+        color: #ccc;
+    }
+
+/* Hộp kết quả: Đảm bảo đè lên ảnh (z-index cực cao) */
+.dynamic-results {
+    position: absolute;
+    top: 110%; /* nằm ngay dưới thanh search */
+    left: 0; /* 🔥 quan trọng: bám từ input */
+    width: 100%; /* 🔥 bằng đúng thanh search */
+    background: white;
+    border-radius: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 10001 !important;
+    border: 1px solid #eee;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+#searchIconBtn.hidden-icon {
+    display: none; /* 👈 ẩn hẳn icon ngoài */
+}
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #333;
+}
+
+    .suggestion-item:hover {
+        background: #f5f5f5;
+    }
+
+    .suggestion-item img {
+        width: 45px;
+        height: 45px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+.suggestion-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.suggestion-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.suggestion-price {
+    font-size: 0.85rem;
+    color: #e60023;
+}
+/* --- Giao diện tổng thể Giỏ hàng --- */
+.cart-container {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #eef0f2;
+}
+
+/* --- Card sản phẩm --- */
+.cart-item-card {
+    border: none;
+    background: #fff;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    border-bottom: 1px solid #f1f1f1 !important;
+    border-radius: 0 !important;
+}
+
+    .cart-item-card:last-child {
+        border-bottom: none !important;
+    }
+
+    .cart-item-card:hover {
+        background-color: #f9f9f9;
+    }
+
+/* --- Hình ảnh sản phẩm --- */
+.product-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+}
+
+/* --- Tinh chỉnh ô nhập số lượng --- */
+.qty-input {
+    max-width: 80px;
+    height: 38px;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    color: #333;
+}
+
+    .qty-input:focus {
+        border-color: #007bff;
+        box-shadow: none;
+    }
+
+/* --- Nút xóa sản phẩm --- */
+.btn-remove {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    line-height: 35px;
+    border-radius: 50%;
+    background: #fff;
+    color: #dc3545;
+    transition: all 0.2s;
+}
+
+    .btn-remove:hover {
+        background: #dc3545;
+        color: #fff;
+        transform: rotate(90deg);
+    }
+
+/* --- Box tổng tiền bên phải --- */
+.grand-total-box {
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid #eef0f2;
+    position: sticky;
+    top: 100px; /* Giúp khung này trượt theo khi cuộn trang */
+}
+
+    .grand-total-box h5 {
+        color: #333;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+/* --- Hiệu ứng cho text tiền --- */
+.item-total {
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+#grandTotal {
+    color: #007bff;
+    font-size: 1.5rem;
+}
+
+/* --- Nút thanh toán --- */
+.btn-primary.w-100 {
+    background-color: #1a1a1a;
+    border: none;
+    transition: background 0.3s;
+}
+
+    .btn-primary.w-100:hover {
+        background-color: #333;
+    }
+
+/* --- Responsive cho Mobile --- */
+@media (max-width: 768px) {
+    .product-img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .cart-container {
+        padding: 10px;
+    }
+
+    .qty-input {
+        max-width: 60px;
+    }
+}

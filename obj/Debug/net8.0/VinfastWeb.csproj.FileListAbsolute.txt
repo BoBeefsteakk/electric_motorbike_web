@@ -39,3 +39,45 @@ D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\refint\VinfastWeb.dll
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.pdb
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\VinfastWeb.genruntimeconfig.cache
 D:\wpf source\VinfastWeb.csproj\obj\Debug\net8.0\ref\VinfastWeb.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\appsettings.Development.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\appsettings.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\VinfastWeb.staticwebassets.runtime.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\VinfastWeb.staticwebassets.endpoints.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\VinfastWeb.exe
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\VinfastWeb.deps.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\VinfastWeb.runtimeconfig.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\VinfastWeb.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\VinfastWeb.pdb
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.csproj.AssemblyReference.cache
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.GeneratedMSBuildEditorConfig.editorconfig
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.AssemblyInfoInputs.cache
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.AssemblyInfo.cs
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.csproj.CoreCompileInputs.cache
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.MvcApplicationPartsAssemblyInfo.cache
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.RazorAssemblyInfo.cache
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.RazorAssemblyInfo.cs
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.sourcelink.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\rjimswa.dswa.cache.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\scopedcss\bundle\VinfastWeb.styles.css
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\scopedcss\projectbundle\VinfastWeb.bundle.scp.css
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\staticwebassets.build.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\staticwebassets.build.json.cache
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\staticwebassets.development.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\swae.build.ex.cache
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.csproj.Up2Date
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\refint\VinfastWeb.dll
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.pdb
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\VinfastWeb.genruntimeconfig.cache
+D:\tailieu\Web nâng cao\electric_motorbike_web\obj\Debug\net8.0\ref\VinfastWeb.dll
