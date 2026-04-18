@@ -139,34 +139,7 @@ namespace VinfastWeb.Controllers
     public record RemoveItemRequest(int ProductId, string ProductType);
     public record UpdateQtyRequest(int ProductId, string ProductType, int Qty);
 
-    // ── SEARCH ────────────────────────────────────────────────────────────────
-    public class SearchController : Controller
-    {
-        private readonly ApiService _api;
-        public SearchController(ApiService api) => _api = api;
-
-        public async Task<IActionResult> Index(string? q)
-        {
-            if (string.IsNullOrWhiteSpace(q))
-                return View(new SearchViewModel { Query = "" });
-
-            var lower = q.ToLower();
-            var motorbikes = (await _api.GetMotorbikesAsync())
-                .Where(m => m.Name.ToLower().Contains(lower)).ToList();
-            var cars = (await _api.GetCarsAsync())
-                .Where(c => c.Name.ToLower().Contains(lower)).ToList();
-            var accessories = (await _api.GetAccessoriesAsync())
-                .Where(a => a.Name.ToLower().Contains(lower)).ToList();
-
-            return View(new SearchViewModel
-            {
-                Query = q,
-                Motorbikes = motorbikes,
-                Cars = cars,
-                Accessories = accessories
-            });
-        }
-    }
+    
 
     // ── PROFILE ───────────────────────────────────────────────────────────────
     public class ProfileController : Controller
