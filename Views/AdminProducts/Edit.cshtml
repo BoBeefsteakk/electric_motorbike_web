@@ -19,7 +19,17 @@
                 </div>
             </div>
 
-            <form asp-action="Edit" method="post" class="admin-edit-form">
+            @if (TempData["Error"] != null)
+            {
+                <div class="admin-alert admin-alert-error" style="margin-bottom:20px;">
+                    @TempData["Error"]
+                </div>
+            }
+
+            <div asp-validation-summary="All" class="text-danger" style="margin-bottom:15px;"></div>
+
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
                 <input asp-for="ProductID" type="hidden" />
 
                 <div class="admin-form-grid">
@@ -28,7 +38,7 @@
 
                         <div class="admin-field">
                             <label>Mã sản phẩm</label>
-                            <input value="@Model.ProductID" disabled />
+                            <input value="#@Model.ProductID" disabled />
                         </div>
 
                         <div class="admin-field">
@@ -44,18 +54,45 @@
                         </div>
 
                         <div class="admin-field">
-                            <label asp-for="PathImage">Ảnh sản phẩm</label>
-                            <input asp-for="PathImage" placeholder="/images/xe.jpg hoặc url ảnh" />
-                            <span asp-validation-for="PathImage" class="text-danger"></span>
-                        </div>
+                            <label>Ảnh sản phẩm</label>
 
-                        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
-                        {
-                            <div class="admin-preview-box">
-                                <div class="admin-preview-label">Xem trước ảnh</div>
-                                <img src="@Model.ImageUrl" alt="@Model.ProductName" class="admin-preview-image" />
+                            @if (!string.IsNullOrWhiteSpace(Model.PathImage))
+                            {
+                                <div class="admin-preview-box" id="currentImageBox">
+                                    <div class="admin-preview-label">Ảnh hiện tại</div>
+                                    <img id="previewImg"
+                                         src="@Model.PathImage"
+                                         alt="@Model.ProductName"
+                                         class="admin-preview-image"
+                                         onerror="this.onerror=null;this.src='/images/no-image.png';" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="admin-preview-box" id="currentImageBox" style="display:none;">
+                                    <div class="admin-preview-label">Xem trước ảnh</div>
+                                    <img id="previewImg" src="" alt="" class="admin-preview-image" />
+                                </div>
+                            }
+
+                            <div class="admin-upload-group">
+                                <label class="admin-upload-label" for="ImageFile">
+                                    📁 Chọn ảnh mới từ máy tính
+                                </label>
+                                <input type="file"
+                                       id="ImageFile"
+                                       name="ImageFile"
+                                       accept="image/*"
+                                       class="admin-upload-input" />
+                                <p class="admin-field-hint">Không bắt buộc. Nếu không chọn, ảnh cũ sẽ được giữ nguyên.</p>
                             </div>
-                        }
+
+                            <div class="admin-field" style="margin-top: 0.5rem;">
+                                <label asp-for="PathImage">Hoặc nhập đường dẫn ảnh thủ công</label>
+                                <input asp-for="PathImage" placeholder="/images/xe.jpg hoặc https://..." />
+                                <span asp-validation-for="PathImage" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="admin-form-section">
@@ -63,12 +100,25 @@
 
                         <div class="admin-field">
                             <label asp-for="ProductType">Loại sản phẩm</label>
-                            <select asp-for="ProductType">
+                            <select asp-for="ProductType" id="productTypeSelect">
                                 <option value="">-- Chọn loại --</option>
                                 <option value="Xe máy">Xe máy</option>
                                 <option value="Ô tô">Ô tô</option>
+                                <option value="Phụ kiện">Phụ kiện</option>
+                                <option value="Showroom">Showroom</option>
                             </select>
                             <span asp-validation-for="ProductType" class="text-danger"></span>
+                        </div>
+
+                        <div class="admin-field" id="categoryGroupWrapper">
+                            <label asp-for="CategoryGroup">Nhóm danh mục</label>
+                            <select asp-for="CategoryGroup">
+                                <option value="">-- Chọn nhóm danh mục --</option>
+                                <option value="pho_thong">Phổ thông</option>
+                                <option value="trung_cap">Trung cấp</option>
+                                <option value="cao_cap">Cao cấp</option>
+                            </select>
+                            <span asp-validation-for="CategoryGroup" class="text-danger"></span>
                         </div>
 
                         <div class="admin-form-row-2">
@@ -86,8 +136,8 @@
                         </div>
 
                         <div class="admin-field">
-                            <label asp-for="Price">Giá</label>
-                            <input asp-for="Price" type="number" min="0" step="1000" />
+                            <label asp-for="Price">Giá (VNĐ)</label>
+                            <input asp-for="Price" type="number"/>
                             <span asp-validation-for="Price" class="text-danger"></span>
                         </div>
 
@@ -118,4 +168,46 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById('ImageFile')?.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const box = document.getElementById('currentImageBox');
+                const img = document.getElementById('previewImg');
+
+                if (box) box.style.display = 'block';
+                if (img) {
+                    img.src = e.target.result;
+                    img.alt = file.name;
+                }
+
+                const pathInput = document.querySelector('input[name="PathImage"]');
+                if (pathInput) pathInput.value = '';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const productTypeSelect = document.getElementById("productTypeSelect");
+            const categoryGroupWrapper = document.getElementById("categoryGroupWrapper");
+            const categoryGroupSelect = document.querySelector('[name="CategoryGroup"]');
+
+            function toggleCategoryGroup() {
+                const value = productTypeSelect.value?.trim().toLowerCase();
+                if (value === "xe máy") {
+                    categoryGroupWrapper.style.display = "block";
+                } else {
+                    categoryGroupWrapper.style.display = "none";
+                    if (categoryGroupSelect) categoryGroupSelect.value = "";
+                }
+            }
+
+            toggleCategoryGroup();
+            productTypeSelect.addEventListener("change", toggleCategoryGroup);
+        });
+    </script>
 }

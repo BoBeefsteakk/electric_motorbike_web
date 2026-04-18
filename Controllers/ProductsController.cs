@@ -53,5 +53,6 @@ namespace VinfastWeb.Controllers
             if (product == null) return NotFound();
             return View(product);
         }
+
     }
 }

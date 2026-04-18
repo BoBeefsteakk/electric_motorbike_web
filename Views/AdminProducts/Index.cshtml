@@ -39,30 +39,24 @@
             </div>
 
             <form method="get" asp-action="Index" class="admin-filter-form" id="adminFilterForm">
-                <div class="admin-filter-grid">
-                    <div class="admin-field admin-field-grow">
+                <div class="admin-filter-grid admin-filter-grid-custom">
+                    <div class="admin-field admin-field-search">
                         <label for="keyword">Tìm kiếm theo tên, mã, mô tả</label>
-                        <input id="keyword"
-                               name="keyword"
-                               type="text"
-                               value="@Model.Keyword"
-                               placeholder="Nhập tên, mã, mô tả..." />
+
+                        <div class="admin-search-wrap admin-search-wrap-inline">
+                            <input id="keyword"
+                                   name="keyword"
+                                   type="text"
+                                   value="@Model.Keyword"
+                                   placeholder="Nhập tên, mã, mô tả..." />
+
+                            <button type="submit" class="admin-search-btn-inline" title="Tìm kiếm">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="admin-field">
-                        <label for="productType">Loại sản phẩm</label>
-                        <select id="productType" name="productType">
-                            <option value="">Tất cả</option>
-                            <option value="Phổ thông" selected="@(Model.ProductType == "Phổ thông")">Phổ thông</option>
-                            <option value="Trung cấp" selected="@(Model.ProductType == "Trung cấp")">Trung cấp</option>
-                            <option value="Cao cấp" selected="@(Model.ProductType == "Cao cấp")">Cao cấp</option>
-                            <option value="Ô tô" selected="@(Model.ProductType == "Ô tô")">Ô tô</option>
-                            <option value="Phụ kiện" selected="@(Model.ProductType == "Phụ kiện")">Phụ kiện</option>
-                            <option value="Showroom" selected="@(Model.ProductType == "Showroom")">Showroom</option>
-                        </select>
-                    </div>
-
-                    <div class="admin-field">
+                    <div class="admin-field admin-field-page-size">
                         <label for="pageSize">Số dòng/trang</label>
                         <select id="pageSize" name="pageSize">
                             <option value="10" selected="@(Model.PageSize == 10)">10</option>
@@ -70,6 +64,24 @@
                             <option value="20" selected="@(Model.PageSize == 20)">20</option>
                         </select>
                     </div>
+
+                    @if (Model.ProductType == "Xe máy" || Model.ProductType == "Phổ thông" || Model.ProductType == "Trung cấp" || Model.ProductType == "Cao cấp")
+                    {
+                        <div class="admin-field">
+                            <label for="productType">Phân loại</label>
+                            <select id="productType" name="productType">
+                                <option value="Xe máy" selected="@(Model.ProductType == "Xe máy")">Tất cả xe máy</option>
+                                <option value="Phổ thông" selected="@(Model.ProductType == "Phổ thông")">Phổ thông</option>
+                                <option value="Trung cấp" selected="@(Model.ProductType == "Trung cấp")">Trung cấp</option>
+                                <option value="Cao cấp" selected="@(Model.ProductType == "Cao cấp")">Cao cấp</option>
+                            </select>
+                        </div>
+                    }
+                    else
+                    {
+                        <div></div>
+                    }
+
                 </div>
 
                 <div class="admin-type-switch">
@@ -83,26 +95,15 @@
 
                     <a asp-action="Index"
                        asp-route-keyword="@Model.Keyword"
-                       asp-route-productType="Phổ thông"
+                       asp-route-productType="Xe máy"
                        asp-route-pageSize="@Model.PageSize"
-                       class="@(Model.ProductType == "Phổ thông" ? "active" : "")">
-                        Phổ thông
-                    </a>
-
-                    <a asp-action="Index"
-                       asp-route-keyword="@Model.Keyword"
-                       asp-route-productType="Trung cấp"
-                       asp-route-pageSize="@Model.PageSize"
-                       class="@(Model.ProductType == "Trung cấp" ? "active" : "")">
-                        Trung cấp
-                    </a>
-
-                    <a asp-action="Index"
-                       asp-route-keyword="@Model.Keyword"
-                       asp-route-productType="Cao cấp"
-                       asp-route-pageSize="@Model.PageSize"
-                       class="@(Model.ProductType == "Cao cấp" ? "active" : "")">
-                        Cao cấp
+                       class="@(
+                       Model.ProductType == "Xe máy" ||
+                       Model.ProductType == "Phổ thông" ||
+                       Model.ProductType == "Trung cấp" ||
+                       Model.ProductType == "Cao cấp"
+                           ? "active" : "")">
+                        Xe máy
                     </a>
 
                     <a asp-action="Index"
@@ -131,15 +132,13 @@
                 </div>
 
                 <div class="admin-actions-row">
-                    <div class="admin-actions-left">
-                        <button type="submit" class="admin-btn admin-btn-primary">
-                            Tìm kiếm
-                        </button>
-                        <a asp-action="Index" class="admin-btn admin-btn-light">Reset</a>
-                    </div>
+                    <div></div>
 
                     <div class="admin-actions-right">
-                        <a asp-action="Create" class="admin-btn admin-btn-light">Thêm mới</a>
+                        <a asp-action="Create" class="admin-btn admin-btn-add-modern">
+                            <i class="fas fa-plus"></i>
+                            <span>Thêm mới</span>
+                        </a>
                     </div>
                 </div>
             </form>
@@ -188,7 +187,7 @@
 
                                     <td class="col-image">
                                         <img class="admin-thumb"
-                                             src="@item.ImageUrl"
+                                             src="@(string.IsNullOrWhiteSpace(item.ImageUrl) ? "/images/no-image.png" : item.ImageUrl)"
                                              alt="@item.ProductName"
                                              onerror="this.onerror=null;this.src='/images/no-image.png';" />
                                     </td>
@@ -202,7 +201,7 @@
 
                                     <td class="col-type">
                                         <span class="admin-pill">
-                                            @item.CategoryGroup
+                                            @item.ProductType
                                         </span>
                                     </td>
 
@@ -234,14 +233,27 @@
 
                                             <a asp-action="Duplicate"
                                                asp-route-id="@item.ProductID"
+                                               asp-route-keyword="@Model.Keyword"
+                                               asp-route-productType="@Model.ProductType"
+                                               asp-route-page="@Model.Page"
+                                               asp-route-pageSize="@Model.PageSize"
                                                class="admin-btn admin-btn-row">
                                                 Copy
                                             </a>
 
-                                            <form asp-action="Delete"
-                                                  asp-route-id="@item.ProductID"
+                                            <form asp-controller="AdminProducts"
+                                                  asp-action="Delete"
                                                   method="post"
-                                                  class="admin-inline-form">
+                                                  class="admin-inline-form"
+                                                  style="display:inline;">
+                                                @Html.AntiForgeryToken()
+
+                                                <input type="hidden" name="id" value="@item.ProductID" />
+                                                <input type="hidden" name="keyword" value="@Model.Keyword" />
+                                                <input type="hidden" name="productType" value="@Model.ProductType" />
+                                                <input type="hidden" name="page" value="@Model.Page" />
+                                                <input type="hidden" name="pageSize" value="@Model.PageSize" />
+
                                                 <button type="submit"
                                                         class="admin-btn admin-btn-danger admin-btn-row"
                                                         onclick="return confirm('Xóa bản ghi này?')">
@@ -298,3 +310,97 @@
         });
     </script>
 }
+
+<style>
+    .admin-filter-grid-custom {
+        display: grid;
+        grid-template-columns: 1.9fr 0.45fr 0.65fr;
+        gap: 14px;
+        align-items: end;
+    }
+
+    .admin-field-search {
+        min-width: 0;
+    }
+
+    .admin-search-wrap-inline {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        border: 1px solid #ead8c3;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #fff;
+        height: 56px;
+    }
+
+        .admin-search-wrap-inline input {
+            flex: 1;
+            height: 100%;
+            border: none !important;
+            outline: none;
+            padding: 0 20px !important;
+            font-size: 17px;
+            background: transparent;
+            box-shadow: none !important;
+        }
+
+    .admin-search-btn-inline {
+        width: 60px;
+        height: 100%;
+        border: none;
+        background: #d88a34;
+        color: #fff;
+        font-size: 21px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: .2s ease;
+        flex-shrink: 0;
+    }
+
+        .admin-search-btn-inline:hover {
+            background: #c77924;
+        }
+
+    .admin-btn-add-modern {
+        min-width: 140px;
+        height: 50px;
+        padding: 0 20px;
+        border-radius: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #e29a43, #cf7f23);
+        color: #fff !important;
+        font-size: 18px;
+        font-weight: 700;
+        border: none;
+        box-shadow: 0 8px 18px rgba(210, 132, 39, .18);
+        text-decoration: none;
+    }
+
+        .admin-btn-add-modern:hover {
+            background: linear-gradient(135deg, #d68d37, #bf721b);
+            color: #fff !important;
+            transform: translateY(-1px);
+        }
+
+    .admin-filter-grid-custom .admin-field select {
+        height: 58px;
+        border-radius: 18px;
+        font-size: 16px;
+        padding: 0 16px;
+    }
+
+    .admin-filter-grid-custom .admin-field label {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+    }
+</style>
+

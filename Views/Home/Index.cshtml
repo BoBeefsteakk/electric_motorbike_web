@@ -140,22 +140,40 @@
             {
                 <div class="ch-product-card">
                     <div class="ch-product-img">
-                        <div class="ch-product-badge-wrap"><span class="ch-badge blue">Phổ Thông</span></div>
-                        <div class="ch-wish"><i class="far fa-heart"></i></div>
+                        <div class="ch-product-badge-wrap">
+                            <span class="ch-badge blue">Phổ Thông</span>
+                        </div>
+
+                        <button type="button"
+                                class="ch-wish"
+                                title="Thêm vào yêu thích"
+                                data-product-id="@item.Id"
+                                data-product-name="@item.Name">
+                            <i class="far fa-heart"></i>
+                        </button>
+
                         <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
                              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
                     </div>
+
                     <div class="ch-product-body">
                         <div class="ch-product-name">@item.Name</div>
                         <div class="ch-product-sub">Xe Máy Điện · Phổ Thông</div>
+
                         <div class="ch-product-specs">
                             <div class="ch-spec"><i class="fas fa-bolt"></i><span>Điện</span></div>
                             <div class="ch-spec"><i class="fas fa-battery-full"></i><span>Pin LFP</span></div>
                             <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
                         </div>
+
                         <div class="ch-product-footer">
                             <div class="ch-price">@item.FormattedPrice</div>
-                            <a href="/Products/Detail/@item.Id" class="ch-view-btn">Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i></a>
+                            <a asp-controller="Products"
+                               asp-action="Detail"
+                               asp-route-id="@item.Id"
+                               class="ch-view-btn"> 
+                                Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -167,22 +185,40 @@
             {
                 <div class="ch-product-card">
                     <div class="ch-product-img">
-                        <div class="ch-product-badge-wrap"><span class="ch-badge blue">Trung Cấp</span></div>
-                        <div class="ch-wish"><i class="far fa-heart"></i></div>
+                        <div class="ch-product-badge-wrap">
+                            <span class="ch-badge blue">Trung Cấp</span>
+                        </div>
+
+                        <button type="button"
+                                class="ch-wish"
+                                title="Thêm vào yêu thích"
+                                data-product-id="@item.Id"
+                                data-product-name="@item.Name">
+                            <i class="far fa-heart"></i>
+                        </button>
+
                         <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
                              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
                     </div>
+
                     <div class="ch-product-body">
                         <div class="ch-product-name">@item.Name</div>
                         <div class="ch-product-sub">Xe Máy Điện · Trung Cấp</div>
+
                         <div class="ch-product-specs">
                             <div class="ch-spec"><i class="fas fa-bolt"></i><span>Điện</span></div>
                             <div class="ch-spec"><i class="fas fa-battery-full"></i><span>Pin NMC</span></div>
                             <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
                         </div>
+
                         <div class="ch-product-footer">
                             <div class="ch-price">@item.FormattedPrice</div>
-                            <a href="/Products/Detail/@item.Id" class="ch-view-btn">Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i></a>
+                            <a asp-controller="Products"
+                               asp-action="Detail"
+                               asp-route-id="@item.Id"
+                               class="ch-view-btn">
+                                Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -194,22 +230,40 @@
             {
                 <div class="ch-product-card">
                     <div class="ch-product-img">
-                        <div class="ch-product-badge-wrap"><span class="ch-badge green">Cao Cấp</span></div>
-                        <div class="ch-wish"><i class="far fa-heart"></i></div>
+                        <div class="ch-product-badge-wrap">
+                            <span class="ch-badge green">Cao Cấp</span>
+                        </div>
+
+                        <button type="button"
+                                class="ch-wish"
+                                title="Thêm vào yêu thích"
+                                data-product-id="@item.Id"
+                                data-product-name="@item.Name">
+                            <i class="far fa-heart"></i>
+                        </button>
+
                         <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
                              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
                     </div>
+
                     <div class="ch-product-body">
                         <div class="ch-product-name">@item.Name</div>
                         <div class="ch-product-sub">Xe Máy Điện · Cao Cấp</div>
+
                         <div class="ch-product-specs">
                             <div class="ch-spec"><i class="fas fa-bolt"></i><span>Điện</span></div>
                             <div class="ch-spec"><i class="fas fa-battery-full"></i><span>Pin NMC+</span></div>
                             <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
                         </div>
+
                         <div class="ch-product-footer">
                             <div class="ch-price">@item.FormattedPrice</div>
-                            <a href="/Products/Detail/@item.Id" class="ch-view-btn">Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i></a>
+                            <a asp-controller="Products"
+                               asp-action="Detail"
+                               asp-route-id="@item.Id"
+                               class="ch-view-btn">
+                                Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -219,7 +273,7 @@
         <div class="ch-product-grid" id="grid-o_to" style="display:none">
             @foreach (var item in Model.FeaturedCars.Take(4))
             {
-                <a href="/Cars" class="ch-product-card">
+                <div class="ch-product-card">
                     <div class="ch-product-img">
                         <div class="ch-product-badge-wrap">
                             <span class="ch-badge blue">
@@ -227,24 +281,37 @@
                                                             item.Category == "dong_co_xang" ? "Xe Xăng" : "Dịch Vụ")
                         </span>
                     </div>
-                    <div class="ch-wish"><i class="far fa-heart"></i></div>
-                    <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
-                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
-                </div>
-                <div class="ch-product-body">
-                    <div class="ch-product-name">@item.Name</div>
-                    <div class="ch-product-sub">Ô Tô VinFast</div>
-                    <div class="ch-product-specs">
-                        <div class="ch-spec"><i class="fas fa-car"></i><span>VinFast</span></div>
-                        <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
-                        <div class="ch-spec"><i class="fas fa-tag"></i><span>Chính hãng</span></div>
+
+                        <button type="button"
+                                class="ch-wish"
+                                title="Thêm vào yêu thích"
+                                data-product-id="@item.Id"
+                                data-product-name="@item.Name">
+                            <i class="far fa-heart"></i>
+                        </button>
+
+                        <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
                     </div>
-                    <div class="ch-product-footer">
-                        <div class="ch-price">@item.FormattedPrice</div>
-                        <span class="ch-view-btn">Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i></span>
+
+                    <div class="ch-product-body">
+                        <div class="ch-product-name">@item.Name</div>
+                        <div class="ch-product-sub">Ô Tô VinFast</div>
+
+                        <div class="ch-product-specs">
+                            <div class="ch-spec"><i class="fas fa-car"></i><span>VinFast</span></div>
+                            <div class="ch-spec"><i class="fas fa-shield-alt"></i><span>BH 3 năm</span></div>
+                            <div class="ch-spec"><i class="fas fa-tag"></i><span>Chính hãng</span></div>
+                        </div>
+
+                        <div class="ch-product-footer">
+                            <div class="ch-price">@item.FormattedPrice</div>
+                            <a href="/Cars" class="ch-view-btn">
+                                Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </a>
                         }
         </div>
 
@@ -491,5 +558,30 @@
           if (type === 'accessory') { window.location = '/Accessories'; return; }
           window.location = cat ? '/Products?category=' + cat : '/Products';
         }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const wishButtons = document.querySelectorAll(".ch-wish");
+
+            wishButtons.forEach(btn => {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    this.classList.toggle("active");
+
+                    const icon = this.querySelector("i");
+                    if (icon) {
+                        if (this.classList.contains("active")) {
+                            icon.classList.remove("far");
+                            icon.classList.add("fas");
+                        } else {
+                            icon.classList.remove("fas");
+                            icon.classList.add("far");
+                        }
+                    }
+                });
+            });
+        });
     </script>
 }

@@ -1,0 +1,1168 @@
+﻿@model VinfastWeb.ViewModels.UserProfileViewModel
+
+<!-- Toast Notification -->
+<div id="toast" style="
+    position:fixed;
+    top:24px;
+    right:24px;
+    z-index:9999;
+    background:#1f2a56;
+    color:#fff;
+    padding:14px 22px;
+    border-radius:14px;
+    font-size:14px;
+    font-weight:600;
+    box-shadow:0 8px 28px rgba(31,42,86,.3);
+    display:none;
+    align-items:center;
+    gap:10px;
+    animation:slideIn .3s ease;">
+    <i class="fas fa-check-circle" style="color:#4ade80;font-size:16px;"></i>
+    <span id="toastMsg">Lưu thành công!</span>
+</div>
+
+<style>
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes slideOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-12px);
+        }
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .setting-menu {
+        display: flex;
+        align-items: center;
+        padding: 12px 14px;
+        margin-bottom: 4px;
+        text-decoration: none;
+        color: #111;
+        font-size: 14px;
+        border-radius: 12px;
+        transition: background .15s, color .15s;
+        gap: 12px;
+        cursor: pointer;
+    }
+
+        .setting-menu:hover {
+            background: #f1f3f7;
+        }
+
+        .setting-menu.active {
+            background: #eef0f8;
+            color: #1f2a56;
+            font-weight: 700;
+        }
+
+            .setting-menu.active .menu-icon {
+                color: #1f2a56;
+            }
+
+    .menu-icon {
+        width: 18px;
+        text-align: center;
+        color: #888;
+        font-size: 15px;
+    }
+
+    .gender-btn {
+        flex: 1;
+        min-width: 80px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #e8eaf0;
+        color: #555;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all .2s;
+        user-select: none;
+    }
+
+        .gender-btn.selected {
+            background: #1f2a56;
+            color: #fff;
+            border-color: #1f2a56;
+            box-shadow: 0 4px 14px rgba(31,42,86,.28);
+        }
+
+        .gender-btn:hover:not(.selected) {
+            background: #dde0ec;
+        }
+
+    .info-card {
+        background: #f8f9fb;
+        border-radius: 16px;
+        padding: 20px 22px;
+        margin-bottom: 14px;
+    }
+
+    .info-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .info-card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111;
+    }
+
+    .info-card-body {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.8;
+    }
+
+    .status-badge {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+    }
+
+    .status-done {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .status-pending {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+    .status-active {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .status-expired {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .section-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: #1f2a56;
+        margin: 0 0 22px 0;
+        letter-spacing: -.3px;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: #555;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+    }
+
+    .field-input {
+        width: 100%;
+        background: #f3f4f6;
+        border: 2px solid transparent;
+        outline: none;
+        border-radius: 12px;
+        padding: 13px 16px;
+        font-size: 15px;
+        color: #111;
+        transition: border-color .2s, background .2s;
+    }
+
+        .field-input:focus {
+            background: #fff;
+            border-color: #1f2a56;
+        }
+
+    .toggle-switch {
+        position: relative;
+        width: 50px;
+        height: 28px;
+    }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+    .toggle-slider {
+        position: absolute;
+        inset: 0;
+        background: #dde0ec;
+        border-radius: 28px;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 4px;
+            top: 4px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform .2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,.2);
+        }
+
+    .toggle-switch input:checked + .toggle-slider {
+        background: #1f2a56;
+    }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+        }
+
+    .add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 2px dashed #c5cadc;
+        background: transparent;
+        color: #1f2a56;
+        border-radius: 14px;
+        padding: 13px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all .2s;
+        width: 100%;
+        justify-content: center;
+    }
+
+        .add-btn:hover {
+            border-color: #1f2a56;
+            background: #f0f2f9;
+        }
+
+    .save-btn {
+        border: none;
+        background: linear-gradient(135deg, #1f2a56, #2d3f82);
+        color: #fff;
+        border-radius: 14px;
+        padding: 14px 26px;
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: 0 8px 20px rgba(31,42,86,.25);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform .15s, box-shadow .15s;
+    }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 26px rgba(31,42,86,.32);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+    .divider {
+        border: none;
+        border-top: 1px solid #eee;
+        margin: 16px 0;
+    }
+
+    .payment-card {
+        background: linear-gradient(135deg, #1f2a56, #2d3f82);
+        border-radius: 18px;
+        padding: 22px 24px;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 14px;
+    }
+
+        .payment-card::after {
+            content: '';
+            position: absolute;
+            right: -30px;
+            top: -30px;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.06);
+        }
+
+    .support-contact {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 20px;
+        background: #f8f9fb;
+        border-radius: 16px;
+        margin-bottom: 12px;
+        text-decoration: none;
+        color: inherit;
+        transition: background .15s;
+    }
+
+        .support-contact:hover {
+            background: #eef0f8;
+        }
+
+    .support-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: #eef0f8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #1f2a56;
+        flex-shrink: 0;
+    }
+
+    .fav-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px 18px;
+        box-shadow: 0 4px 16px rgba(0,0,0,.06);
+        margin-bottom: 12px;
+        border: 1px solid #f0f0f0;
+    }
+
+    .fav-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        background: #f3f4f6;
+        object-fit: cover;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #aaa;
+        font-size: 22px;
+    }
+
+    .pay-opt {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        border-radius: 18px;
+        border: 1.5px solid #e5e7eb;
+        background: #f3f4f6;
+        cursor: pointer;
+        transition: all .2s;
+        gap: 0;
+    }
+
+        .pay-opt:hover {
+            border-color: #c7d2fe;
+            background: #eef2ff;
+        }
+
+        .pay-opt.active-pay {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+    .pay-icon-box {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .pay-icon-active {
+        background: #dbeafe;
+    }
+
+    .pay-opt-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111;
+    }
+
+    .pay-opt.active-pay .pay-opt-title {
+        color: #1d4ed8;
+    }
+
+    .pay-opt-sub {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-top: 2px;
+    }
+
+    .radio-outer {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 1.5px solid #d1d5db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-left: auto;
+        transition: border-color .2s;
+    }
+
+        .radio-outer.radio-active {
+            border-color: #2563eb;
+        }
+
+    .radio-inner {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #2563eb;
+    }
+
+</style>
+
+<div style="
+    max-width: 1420px;
+    margin: 30px auto;
+    padding: 0 36px;
+    display: flex;
+    gap: 24px;
+    min-height: calc(100vh - 170px);">
+
+    <!-- ===== LEFT SIDEBAR ===== -->
+    <div style="
+        width: 280px;
+        flex-shrink: 0;
+        background: #fff;
+        border-radius: 22px;
+        padding: 26px 18px;
+        height: fit-content;
+        position: sticky;
+        top: 24px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.1);">
+
+        <!-- Avatar mini -->
+        <div style="display:flex;align-items:center;gap:12px;padding:0 8px;margin-bottom:22px;">
+            <img src="@(string.IsNullOrWhiteSpace(Model.AvatarUri) ? "https://via.placeholder.com/48" : Model.AvatarUri)"
+                 id="sidebarAvatar"
+                 style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #eef0f8;" />
+            <div>
+                <div style="font-size:14px;font-weight:700;color:#111;">@Model.FullName</div>
+                <div style="font-size:12px;color:#888;">@Model.Email</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.8px;padding:0 8px;margin-bottom:8px;">Tài khoản</div>
+
+        <a class="setting-menu active" data-section="profile">
+            <span class="menu-icon"><i class="fas fa-user"></i></span> Hồ sơ cá nhân
+        </a>
+        <a class="setting-menu" data-section="orders">
+            <span class="menu-icon"><i class="fas fa-box"></i></span> Đơn hàng của tôi
+        </a>
+        <a class="setting-menu" data-section="payment">
+            <span class="menu-icon"><i class="fas fa-credit-card"></i></span> Thanh toán
+        </a>
+
+        <div class="divider"></div>
+
+        <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.8px;padding:0 8px;margin-bottom:8px;">Cài đặt</div>
+
+        <a class="setting-menu" data-section="notification">
+            <span class="menu-icon"><i class="fas fa-bell"></i></span> Thông báo
+        </a>
+        <a class="setting-menu" data-section="warranty">
+            <span class="menu-icon"><i class="fas fa-shield-alt"></i></span> Bảo hành
+        </a>
+        <a class="setting-menu" data-section="support">
+            <span class="menu-icon"><i class="fas fa-headset"></i></span> Hỗ trợ
+        </a>
+        <a class="setting-menu" data-section="privacy">
+            <span class="menu-icon"><i class="fas fa-user-shield"></i></span> Chính sách riêng tư
+        </a>
+        <a class="setting-menu" data-section="terms">
+            <span class="menu-icon"><i class="fas fa-file-alt"></i></span> Điều khoản sử dụng
+        </a>
+
+        <div class="divider"></div>
+
+        <a href="/Auth/Logout"
+           style="display:flex;align-items:center;gap:12px;padding:12px 14px;color:#dc2626;text-decoration:none;font-size:14px;font-weight:600;border-radius:12px;transition:background .15s;"
+           onmouseover="this.style.background='#fff1f1'" onmouseout="this.style.background='transparent'">
+            <span style="width:18px;text-align:center;"><i class="fas fa-sign-out-alt"></i></span>
+            Đăng xuất
+        </a>
+    </div>
+
+    <!-- ===== RIGHT CONTENT ===== -->
+    <div style="flex:1;min-width:0;">
+
+        <!-- ========== HỒ SƠ ========== -->
+        <div class="setting-section" id="section-profile">
+            <form method="post" action="/Settings/EditProfile" id="profileForm">
+                <input type="hidden" name="UserId" value="@Model.UserId" />
+                <input type="hidden" name="Birthday" id="BirthdayHidden" value="@Model.Birthday" />
+                <input type="hidden" name="AvatarUri" id="AvatarUri" value="@Model.AvatarUri" />
+                <input type="hidden" name="Gender" id="GenderHidden" value="@Model.Gender" />
+
+                <!-- Avatar + Tên -->
+                <div style="background:#fff;border-radius:22px;padding:30px;margin-bottom:18px;box-shadow:0 6px 24px rgba(0,0,0,.07);text-align:center;">
+                    <div style="position:relative;display:inline-block;margin-bottom:18px;">
+                        <div style="width:110px;height:110px;border-radius:50%;overflow:hidden;background:#f3f4f6;border:3px solid #eef0f8;margin:0 auto;">
+                            <img id="avatarPreview"
+                                 src="@(string.IsNullOrWhiteSpace(Model.AvatarUri) ? "https://via.placeholder.com/110" : Model.AvatarUri)"
+                                 style="width:100%;height:100%;object-fit:cover;" />
+                        </div>
+                        <label for="avatarFile" style="
+                            position:absolute; right:2px; bottom:2px;
+                            width:34px; height:34px; border-radius:50%;
+                            background:#1f2a56; color:#fff;
+                            display:flex; align-items:center; justify-content:center;
+                            cursor:pointer; box-shadow:0 4px 12px rgba(31,42,86,.35); font-size:13px;">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <input type="file" id="avatarFile" accept="image/*" style="display:none;" />
+                    </div>
+
+                    <input type="text" name="FullName" id="FullNameInput" value="@Model.FullName"
+                           placeholder="Họ và tên"
+                           style="border:none;outline:none;text-align:center;font-size:24px;font-weight:800;color:#111;background:transparent;width:100%;max-width:340px;display:block;margin:0 auto 4px;" />
+                    <div style="font-size:13px;color:#aaa;">@Model.Email</div>
+                </div>
+
+                <!-- Form fields -->
+                <div style="background:#fff;border-radius:22px;padding:28px;margin-bottom:18px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                    <div style="font-size:16px;font-weight:800;color:#1f2a56;margin-bottom:20px;">Thông tin cá nhân</div>
+
+                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+
+                        <div>
+                            <label class="field-label">Số điện thoại</label>
+                            <input type="text" name="Phone" value="@Model.Phone"
+                                   placeholder="Nhập số điện thoại" class="field-input" />
+                        </div>
+
+                        <div>
+                            <label class="field-label">Email</label>
+                            <input type="email" name="Email" value="@Model.Email"
+                                   placeholder="Nhập email" class="field-input" />
+                        </div>
+
+                        <div style="grid-column:1/-1;">
+                            <label class="field-label">Địa chỉ</label>
+                            <input type="text" name="Address" value="@Model.Address"
+                                   placeholder="Nhập địa chỉ" class="field-input" />
+                        </div>
+
+                        <div>
+                            <label class="field-label">Ngày sinh</label>
+                            <input type="date" id="BirthdayPicker"
+                                   value="@Model.Birthday"
+                                   class="field-input"
+                                   onchange="document.getElementById('BirthdayHidden').value=this.value" />
+                        </div>
+
+                        <div>
+                            <label class="field-label">Giới tính</label>
+                            <div style="display:flex;gap:10px;" id="genderGroup">
+                                <div class="gender-btn @(Model.Gender == "Nam" ? "selected" : "")" data-value="Nam"
+                                     onclick="selectGender(this)">
+                                    <i class="fas fa-mars" style="margin-right:6px;"></i> Nam
+                                </div>
+                                <div class="gender-btn @(Model.Gender == "Nữ" ? "selected" : "")" data-value="Nữ"
+                                     onclick="selectGender(this)">
+                                    <i class="fas fa-venus" style="margin-right:6px;"></i> Nữ
+                                </div>
+                                <div class="gender-btn @(Model.Gender == "Khác" ? "selected" : "")" data-value="Khác"
+                                     onclick="selectGender(this)">
+                                    <i class="fas fa-genderless" style="margin-right:6px;"></i> Khác
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div style="display:flex;justify-content:flex-end;margin-top:24px;">
+                        <button type="submit" class="save-btn">
+                            <i class="fas fa-save"></i> Lưu thông tin
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Sản phẩm yêu thích -->
+            <div style="background:#fff;border-radius:22px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                <div style="font-size:16px;font-weight:800;color:#1f2a56;margin-bottom:18px;">
+                    <i class="fas fa-heart" style="color:#e74c3c;margin-right:8px;"></i>Sản phẩm yêu thích
+                </div>
+
+                <div class="fav-card">
+                    <div class="fav-img"><i class="fas fa-car-side"></i></div>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:700;color:#111;margin-bottom:4px;">VinFast VF e34</div>
+                        <div style="font-size:12px;color:#888;">Mã: SP001 &nbsp;·&nbsp; Ô tô điện</div>
+                    </div>
+                    <span class="status-badge status-active">Yêu thích</span>
+                </div>
+
+                <div class="fav-card">
+                    <div class="fav-img"><i class="fas fa-motorcycle"></i></div>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:700;color:#111;margin-bottom:4px;">VinFast Klara S2</div>
+                        <div style="font-size:12px;color:#888;">Mã: SP002 &nbsp;·&nbsp; Xe máy điện</div>
+                    </div>
+                    <span class="status-badge status-active">Yêu thích</span>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== ĐƠN HÀNG ========== -->
+        <div class="setting-section" id="section-orders" style="display:none;">
+            <div style="background:#fff;border-radius:22px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                <div class="section-title">Đơn hàng của tôi</div>
+
+                <!-- Filter tabs -->
+                <div style="display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;">
+                    <button onclick="filterOrders('all',this)" class="order-tab active-tab"
+                            style="padding:8px 18px;border-radius:20px;border:none;background:#1f2a56;color:#fff;font-size:13px;font-weight:600;cursor:pointer;">
+                        Tất cả
+                    </button>
+                    <button onclick="filterOrders('done',this)" class="order-tab"
+                            style="padding:8px 18px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#555;font-size:13px;font-weight:600;cursor:pointer;">
+                        Đã giao
+                    </button>
+                    <button onclick="filterOrders('pending',this)" class="order-tab"
+                            style="padding:8px 18px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#555;font-size:13px;font-weight:600;cursor:pointer;">
+                        Đang xử lý
+                    </button>
+                </div>
+
+                <div class="info-card order-item" data-status="done">
+                    <div class="info-card-header">
+                        <span class="info-card-title"><i class="fas fa-hashtag" style="font-size:11px;opacity:.6;"></i>DH001</span>
+                        <span class="status-badge status-done"><i class="fas fa-check" style="font-size:10px;margin-right:4px;"></i>Đã giao</span>
+                    </div>
+                    <div class="info-card-body">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                            <div style="width:44px;height:44px;border-radius:10px;background:#eef0f8;display:flex;align-items:center;justify-content:center;font-size:18px;color:#1f2a56;">
+                                <i class="fas fa-car-side"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:14px;font-weight:700;color:#111;">VinFast VF e34</div>
+                                <div style="font-size:12px;color:#999;">Ngày đặt: 10/04/2026</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:10px;">
+                            <span style="font-size:13px;color:#888;">Tổng tiền</span>
+                            <span style="font-size:16px;font-weight:800;color:#1f2a56;">690.000.000 ₫</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card order-item" data-status="pending">
+                    <div class="info-card-header">
+                        <span class="info-card-title"><i class="fas fa-hashtag" style="font-size:11px;opacity:.6;"></i>DH002</span>
+                        <span class="status-badge status-pending"><i class="fas fa-clock" style="font-size:10px;margin-right:4px;"></i>Đang xử lý</span>
+                    </div>
+                    <div class="info-card-body">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                            <div style="width:44px;height:44px;border-radius:10px;background:#eef0f8;display:flex;align-items:center;justify-content:center;font-size:18px;color:#1f2a56;">
+                                <i class="fas fa-motorcycle"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:14px;font-weight:700;color:#111;">VinFast Klara S2</div>
+                                <div style="font-size:12px;color:#999;">Ngày đặt: 15/04/2026</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:10px;">
+                            <span style="font-size:13px;color:#888;">Tổng tiền</span>
+                            <span style="font-size:16px;font-weight:800;color:#1f2a56;">42.000.000 ₫</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== THANH TOÁN ========== -->
+        <div class="setting-section" id="section-payment" style="display:none;">
+            <div style="background:#fff;border-radius:22px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                <div class="section-title">Phương thức thanh toán</div>
+
+                <!-- Label SELECT PAYMENT -->
+                <div style="font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Chọn phương thức</div>
+
+                <!-- 4 payment options -->
+                <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+
+                    <div class="pay-opt active-pay" data-method="card" onclick="selectPayment(this)">
+                        <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                            <div class="pay-icon-box pay-icon-active">
+                                <i class="fas fa-credit-card" style="color:#2563eb;font-size:18px;"></i>
+                            </div>
+                            <div>
+                                <div class="pay-opt-title" style="color:#1d4ed8;">Thẻ tín dụng / Ghi nợ</div>
+                                <div class="pay-opt-sub">Visa, Mastercard, AMEX</div>
+                            </div>
+                        </div>
+                        <div class="radio-outer radio-active"><div class="radio-inner"></div></div>
+                    </div>
+
+                    <div class="pay-opt" data-method="bank" onclick="selectPayment(this)">
+                        <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                            <div class="pay-icon-box">
+                                <i class="fas fa-university" style="color:#6b7280;font-size:18px;"></i>
+                            </div>
+                            <div>
+                                <div class="pay-opt-title">Chuyển khoản ngân hàng</div>
+                                <div class="pay-opt-sub">Trực tiếp từ tài khoản ngân hàng</div>
+                            </div>
+                        </div>
+                        <div class="radio-outer"><div class="radio-inner" style="display:none;"></div></div>
+                    </div>
+
+                    <div class="pay-opt" data-method="paypal" onclick="selectPayment(this)">
+                        <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                            <div class="pay-icon-box">
+                                <i class="fab fa-paypal" style="color:#6b7280;font-size:18px;"></i>
+                            </div>
+                            <div>
+                                <div class="pay-opt-title">PayPal</div>
+                                <div class="pay-opt-sub">Thanh toán qua tài khoản PayPal</div>
+                            </div>
+                        </div>
+                        <div class="radio-outer"><div class="radio-inner" style="display:none;"></div></div>
+                    </div>
+
+                    <div class="pay-opt" data-method="wallet" onclick="selectPayment(this)">
+                        <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                            <div class="pay-icon-box">
+                                <i class="fas fa-mobile-alt" style="color:#6b7280;font-size:18px;"></i>
+                            </div>
+                            <div>
+                                <div class="pay-opt-title">Ví điện tử</div>
+                                <div class="pay-opt-sub">MoMo, ZaloPay, VNPay</div>
+                            </div>
+                        </div>
+                        <div class="radio-outer"><div class="radio-inner" style="display:none;"></div></div>
+                    </div>
+
+                </div>
+
+                <!-- Card preview live -->
+                <div id="cardPreviewWrap" style="margin-bottom:24px;">
+                    <div style="background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:20px;padding:22px 22px 18px;color:#fff;position:relative;overflow:hidden;box-shadow:0 8px 28px rgba(37,99,235,.35);">
+                        <div style="position:absolute;right:-24px;top:-24px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08);"></div>
+                        <div style="position:absolute;right:30px;top:-40px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.05);"></div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
+                            <div style="display:flex;">
+                                <div style="width:22px;height:22px;border-radius:50%;background:#fbbf24;"></div>
+                                <div style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.5);margin-left:-8px;"></div>
+                            </div>
+                            <span style="font-size:20px;font-weight:800;letter-spacing:2px;">VISA</span>
+                        </div>
+                        <div id="previewNumber" style="font-size:20px;font-weight:700;letter-spacing:3px;margin-bottom:22px;font-family:monospace;">
+                            &bull;&bull;&bull;&bull;&nbsp;&nbsp;&bull;&bull;&bull;&bull;&nbsp;&nbsp;&bull;&bull;&bull;&bull;&nbsp;&nbsp;&bull;&bull;&bull;&bull;
+                        </div>
+                        <div style="display:flex;justify-content:space-between;">
+                            <div>
+                                <div style="font-size:11px;color:#bfdbfe;margin-bottom:3px;">Chủ thẻ</div>
+                                <div id="previewName" style="font-size:14px;font-weight:700;">Họ và tên</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:11px;color:#bfdbfe;margin-bottom:3px;">Hết hạn</div>
+                                <div id="previewExpiry" style="font-size:14px;font-weight:700;">MM/YY</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card form fields -->
+                <div id="cardFormWrap">
+                    <div style="margin-bottom:18px;">
+                        <label class="field-label">Số thẻ</label>
+                        <input id="inputCardNumber" type="text" inputmode="numeric" maxlength="19"
+                               placeholder="1234 5678 9012 3456" class="field-input"
+                               oninput="onCardNumberInput(this)" />
+                    </div>
+                    <div style="margin-bottom:18px;">
+                        <label class="field-label">Tên chủ thẻ</label>
+                        <input id="inputCardName" type="text" placeholder="NGUYỄN VĂN A"
+                               class="field-input" style="text-transform:uppercase;"
+                               oninput="document.getElementById('previewName').textContent = this.value.toUpperCase() || 'Họ và tên'" />
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;">
+                        <div>
+                            <label class="field-label">Ngày hết hạn</label>
+                            <input id="inputExpiry" type="text" inputmode="numeric" maxlength="5"
+                                   placeholder="MM/YY" class="field-input"
+                                   oninput="onExpiryInput(this)" />
+                        </div>
+                        <div>
+                            <label class="field-label">CVV</label>
+                            <input id="inputCvv" type="password" inputmode="numeric" maxlength="4"
+                                   placeholder="&bull;&bull;&bull;" class="field-input" />
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:22px;">
+                        <i class="fas fa-lock" style="font-size:12px;color:#9ca3af;"></i>
+                        <span style="font-size:12px;color:#9ca3af;">Mã hóa SSL 256-bit. Thông tin thẻ được bảo mật tuyệt đối.</span>
+                    </div>
+                </div>
+
+                <!-- Non-card info -->
+                <div id="otherPayWrap" style="display:none;margin-bottom:22px;">
+                    <div style="background:#f3f4f6;border-radius:16px;padding:28px;text-align:center;color:#9ca3af;">
+                        <i class="fas fa-info-circle" style="font-size:28px;margin-bottom:10px;display:block;"></i>
+                        <div style="font-size:14px;">Bạn sẽ được chuyển đến trang thanh toán của đối tác khi đặt hàng.</div>
+                    </div>
+                </div>
+
+                <button class="save-btn" style="width:100%;justify-content:center;" onclick="validateAndSavePayment()">
+                    <i class="fas fa-lock"></i> Lưu phương thức thanh toán
+                </button>
+            </div>
+        </div>
+
+        <!-- ========== THÔNG BÁO ========== -->
+        <div class="setting-section" id="section-notification" style="display:none;">
+            <div style="background:#fff;border-radius:22px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                <div class="section-title">Thông báo</div>
+
+                <div style="display:flex;flex-direction:column;gap:2px;">
+                    @{
+                        var notifs = new[] {
+                                        new { icon="fas fa-box", label="Thông báo đơn hàng", sub="Cập nhật tình trạng đơn hàng của bạn", defaultOn=true },
+                                        new { icon="fas fa-tags", label="Khuyến mãi & Ưu đãi", sub="Chương trình giảm giá, flash sale", defaultOn=true },
+                                        new { icon="fas fa-shield-alt", label="Thông báo bảo hành", sub="Nhắc nhở lịch bảo dưỡng, hết hạn bảo hành", defaultOn=false },
+                                        new { icon="fas fa-newspaper", label="Tin tức VinFast", sub="Sản phẩm mới, sự kiện, cập nhật", defaultOn=false },
+                                        new { icon="fas fa-envelope", label="Email thông báo", sub="Nhận thông báo qua email", defaultOn=true },
+                                        };
+                    }
+                    @foreach (var n in notifs)
+                    {
+                        <div style="display:flex;align-items:center;gap:14px;padding:16px 6px;border-bottom:1px solid #f3f4f6;">
+                            <div style="width:40px;height:40px;border-radius:10px;background:#eef0f8;display:flex;align-items:center;justify-content:center;color:#1f2a56;font-size:15px;flex-shrink:0;">
+                                <i class="@n.icon"></i>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="font-size:14px;font-weight:700;color:#111;">@n.label</div>
+                                <div style="font-size:12px;color:#999;margin-top:2px;">@n.sub</div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" @(n.defaultOn ? "checked" : "") />
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    }
+                </div>
+
+                <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+                    <button class="save-btn" onclick="showToast('Cài đặt thông báo đã lưu!'); return false;">
+                        <i class="fas fa-save"></i> Lưu cài đặt
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== BẢO HÀNH ========== -->
+        <div class="setting-section" id="section-warranty" style="display:none;">
+            <div style="background:#fff;border-radius:22px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                <div class="section-title">Bảo hành</div>
+
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:46px;height:46px;border-radius:12px;background:#eef0f8;display:flex;align-items:center;justify-content:center;font-size:20px;color:#1f2a56;">
+                                <i class="fas fa-car-side"></i>
+                            </div>
+                            <div>
+                                <div class="info-card-title">VinFast VF e34</div>
+                                <div style="font-size:12px;color:#999;">Mã bảo hành: BH001</div>
+                            </div>
+                        </div>
+                        <span class="status-badge status-done">Còn hạn</span>
+                    </div>
+                    <div class="divider" style="margin:12px 0;"></div>
+                    <div style="display:flex;gap:24px;">
+                        <div>
+                            <div style="font-size:11px;color:#aaa;text-transform:uppercase;font-weight:700;margin-bottom:4px;">Bắt đầu</div>
+                            <div style="font-size:14px;font-weight:700;color:#111;">12/01/2025</div>
+                        </div>
+                        <div>
+                            <div style="font-size:11px;color:#aaa;text-transform:uppercase;font-weight:700;margin-bottom:4px;">Hết hạn</div>
+                            <div style="font-size:14px;font-weight:700;color:#111;">12/01/2028</div>
+                        </div>
+                        <div>
+                            <div style="font-size:11px;color:#aaa;text-transform:uppercase;font-weight:700;margin-bottom:4px;">Thời hạn</div>
+                            <div style="font-size:14px;font-weight:700;color:#16a34a;">36 tháng</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:46px;height:46px;border-radius:12px;background:#eef0f8;display:flex;align-items:center;justify-content:center;font-size:20px;color:#1f2a56;">
+                                <i class="fas fa-motorcycle"></i>
+                            </div>
+                            <div>
+                                <div class="info-card-title">VinFast Klara S2</div>
+                                <div style="font-size:12px;color:#999;">Mã bảo hành: BH002</div>
+                            </div>
+                        </div>
+                        <span class="status-badge status-done">Còn hạn</span>
+                    </div>
+                    <div class="divider" style="margin:12px 0;"></div>
+                    <div style="display:flex;gap:24px;">
+                        <div>
+                            <div style="font-size:11px;color:#aaa;text-transform:uppercase;font-weight:700;margin-bottom:4px;">Bắt đầu</div>
+                            <div style="font-size:14px;font-weight:700;color:#111;">05/03/2025</div>
+                        </div>
+                        <div>
+                            <div style="font-size:11px;color:#aaa;text-transform:uppercase;font-weight:700;margin-bottom:4px;">Hết hạn</div>
+                            <div style="font-size:14px;font-weight:700;color:#111;">05/03/2027</div>
+                        </div>
+                        <div>
+                            <div style="font-size:11px;color:#aaa;text-transform:uppercase;font-weight:700;margin-bottom:4px;">Thời hạn</div>
+                            <div style="font-size:14px;font-weight:700;color:#16a34a;">24 tháng</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== HỖ TRỢ ========== -->
+        <div class="setting-section" id="section-support" style="display:none;">
+            <div style="background:#fff;border-radius:22px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                <div class="section-title">Hỗ trợ khách hàng</div>
+
+                <a href="tel:1800599961" class="support-contact">
+                    <div class="support-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div>
+                        <div style="font-size:15px;font-weight:700;color:#111;">Hotline chăm sóc khách hàng</div>
+                        <div style="font-size:13px;color:#1f2a56;font-weight:600;margin-top:2px;">1800 599 961</div>
+                        <div style="font-size:12px;color:#aaa;">Miễn phí · 24/7</div>
+                    </div>
+                    <i class="fas fa-chevron-right" style="margin-left:auto;color:#ccc;font-size:12px;"></i>
+                </a>
+
+                <a href="mailto:support@vinfast.vn" class="support-contact">
+                    <div class="support-icon"><i class="fas fa-envelope"></i></div>
+                    <div>
+                        <div style="font-size:15px;font-weight:700;color:#111;">Email hỗ trợ</div>
+                        <div style="font-size:13px;color:#1f2a56;font-weight:600;margin-top:2px;">support@vinfast.vn</div>
+                        <div style="font-size:12px;color:#aaa;">Phản hồi trong 24 giờ</div>
+                    </div>
+                    <i class="fas fa-chevron-right" style="margin-left:auto;color:#ccc;font-size:12px;"></i>
+                </a>
+
+                <a href="#" class="support-contact">
+                    <div class="support-icon" style="background:#e0f2fe;color:#0284c7;"><i class="fas fa-comments"></i></div>
+                    <div>
+                        <div style="font-size:15px;font-weight:700;color:#111;">Chat trực tuyến</div>
+                        <div style="font-size:12px;color:#aaa;margin-top:2px;">Kết nối với nhân viên hỗ trợ ngay</div>
+                    </div>
+                    <span class="status-badge status-done" style="margin-left:auto;">Online</span>
+                </a>
+
+                <a href="#" class="support-contact">
+                    <div class="support-icon" style="background:#fef9c3;color:#ca8a04;"><i class="fas fa-question-circle"></i></div>
+                    <div>
+                        <div style="font-size:15px;font-weight:700;color:#111;">Câu hỏi thường gặp</div>
+                        <div style="font-size:12px;color:#aaa;margin-top:2px;">Tìm kiếm giải pháp nhanh</div>
+                    </div>
+                    <i class="fas fa-chevron-right" style="margin-left:auto;color:#ccc;font-size:12px;"></i>
+                </a>
+            </div>
+        </div>
+
+
+        <!-- ========== CHÍNH SÁCH ========== -->
+        <div class="setting-section" id="section-privacy" style="display:none;">
+            <div style="background:#fff;border-radius:22px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                <div class="section-title">Chính sách riêng tư</div>
+
+                @{
+                    var privacySections = new[] {
+                                new { title="Thu thập thông tin", body="Chúng tôi thu thập thông tin cá nhân như họ tên, số điện thoại, email và địa chỉ khi bạn đăng ký tài khoản hoặc đặt hàng, nhằm cung cấp dịch vụ tốt nhất." },
+                                new { title="Sử dụng thông tin", body="Thông tin của bạn được dùng để xử lý đơn hàng, bảo hành, chăm sóc khách hàng và nâng cao trải nghiệm sử dụng. Chúng tôi không bán hoặc chia sẻ dữ liệu với bên thứ ba vì mục đích thương mại." },
+                                new { title="Bảo mật dữ liệu", body="Dữ liệu của bạn được mã hóa và lưu trữ an toàn trên hệ thống đám mây với tiêu chuẩn bảo mật cao. Chúng tôi áp dụng các biện pháp kỹ thuật và tổ chức phù hợp để ngăn chặn truy cập trái phép." },
+                                new { title="Quyền của bạn", body="Bạn có quyền xem, chỉnh sửa hoặc yêu cầu xóa thông tin cá nhân bất kỳ lúc nào. Liên hệ với chúng tôi qua email để thực hiện các quyền này." },
+                                };
+                }
+                @foreach (var p in privacySections)
+                {
+                    <div style="margin-bottom:18px;">
+                        <div style="font-size:15px;font-weight:800;color:#1f2a56;margin-bottom:8px;">@p.title</div>
+                        <div style="font-size:14px;color:#555;line-height:1.8;">@p.body</div>
+                    </div>
+                    <div class="divider"></div>
+                }
+
+                <div style="font-size:12px;color:#aaa;text-align:center;margin-top:8px;">Cập nhật lần cuối: 01/01/2026</div>
+            </div>
+        </div>
+
+
+        <!-- ========== ĐIỀU KHOẢN ========== -->
+        <div class="setting-section" id="section-terms" style="display:none;">
+            <div style="background:#fff;border-radius:22px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.07);">
+                <div class="section-title">Điều khoản sử dụng</div>
+
+                @{
+                    var termsSections = new[] {
+                                new { title="1. Chấp nhận điều khoản", body="Khi sử dụng nền tảng VinFast, bạn đồng ý tuân thủ toàn bộ điều khoản và điều kiện được nêu trong tài liệu này." },
+                                new { title="2. Mua hàng & Thanh toán", body="Tất cả giao dịch phải được thực hiện thông qua các phương thức thanh toán được chấp thuận. Giá cả và điều kiện có thể thay đổi mà không cần thông báo trước." },
+                                new { title="3. Chính sách đổi trả", body="Sản phẩm có thể được đổi trả trong vòng 7 ngày kể từ ngày nhận hàng nếu có lỗi sản xuất. Sản phẩm phải còn nguyên vẹn và đầy đủ phụ kiện." },
+                                new { title="4. Bảo hành", body="Thời hạn và điều kiện bảo hành áp dụng theo từng dòng sản phẩm. Chi tiết xem tại mục Bảo hành trong ứng dụng hoặc liên hệ hotline." },
+                                new { title="5. Giới hạn trách nhiệm", body="Chúng tôi không chịu trách nhiệm đối với các thiệt hại gián tiếp phát sinh từ việc sử dụng dịch vụ ngoài các cam kết bảo hành chính thức." },
+                                };
+                }
+                @foreach (var t in termsSections)
+                {
+                    <div style="margin-bottom:18px;">
+                        <div style="font-size:15px;font-weight:800;color:#1f2a56;margin-bottom:8px;">@t.title</div>
+                        <div style="font-size:14px;color:#555;line-height:1.8;">@t.body</div>
+                    </div>
+                    <div class="divider"></div>
+                }
+
+                <div style="font-size:12px;color:#aaa;text-align:center;margin-top:8px;">Phiên bản 2.0 · Hiệu lực từ 01/01/2026</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // ── Menu navigation ──────────────────────────────────────
+        const menus    = document.querySelectorAll(".setting-menu");
+        const sections = document.querySelectorAll(".setting-section");
+
+        menus.forEach(menu => {
+            menu.addEventListener("click", function () {
+                const target = this.getAttribute("data-section");
+                menus.forEach(m => m.classList.remove("active"));
+                this.classList.add("active");
+                sections.forEach(s => s.style.display = "none");
+                const el = document.getElementById("section-" + target);
+                if (el) el.style.display = "block";
+            });
+        });
+
+        // ── Avatar upload ─────────────────────────────────────────
+        const avatarInput   = document.getElementById("avatarFile");
+        const avatarPreview = document.getElementById("avatarPreview");
+        const sidebarAvatar = document.getElementById("sidebarAvatar");
+        const avatarUri     = document.getElementById("AvatarUri");
+
+        if (avatarInput) {
+            avatarInput.addEventListener("change", function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    avatarPreview.src  = evt.target.result;
+                    sidebarAvatar.src  = evt.target.result;
+                    avatarUri.value    = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ── Profile form toast on submit ──────────────────────────
+        const profileForm = document.getElementById("profileForm");
+        if (profileForm) {
+            profileForm.addEventListener("submit", function () {
+                showToast("Lưu thông tin thành công!");
+            });
+        }
+
+        // ── Full name mirrors to sidebar ──────────────────────────
+        const fullNameInput = document.getElementById("FullNameInput");
+        if (fullNameInput) {
+            const sidebarName = document.querySelector("#sidebarAvatar + div div:first-child");
+            fullNameInput.addEventListener("input", function () {
+                if (sidebarName) sidebarName.textContent = this.value;
+            });
+        }
+    });
+
+    // ── Gender selection ──────────────────────────────────────────
+    function selectGender(el) {
+        document.querySelectorAll(".gender-btn").forEach(b => b.classList.remove("selected"));
+        el.classList.add("selected");
+        document.getElementById("GenderHidden").value = el.getAttribute("data-value");
+    }
+
+    // ── Order filter tabs ─────────────────────────────────────────
+    function filterOrders(status, btn) {
+        document.querySelectorAll(".order-tab").forEach(t => {
+            t.style.background  = "#fff";
+            t.style.color       = "#555";
+            t.style.border      = "2px solid #e5e7eb";
+        });
+        btn.style.background = "#1f2a56";
+        btn.style.color      = "#fff";
+        btn.style.border     = "2px solid #1f2a56";
+
+        document.querySelectorAll(".order-item").forEach(item => {
+            if (status === "all" || item.getAttribute("data-status") === status) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+
+    // ── Toast helper ──────────────────────────────────────────────
+    function showToast(msg) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toastMsg").textContent = msg || "Lưu thành công!";
+        toast.style.display = "flex";
+        toast.style.animation = "slideIn .3s ease";
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => {
+            toast.style.animation = "slideOut .3s ease forwards";
+            setTimeout(() => { toast.style.display = "none"; }, 300);
+        }, 2800);
+    }
+</script>

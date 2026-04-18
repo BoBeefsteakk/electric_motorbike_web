@@ -273,8 +273,11 @@ namespace VinfastWeb.Services
         {
             try
             {
-                var res = await _http.GetStringAsync($"{_baseUrl}/api/admin/products/{id}");
-                return JsonSerializer.Deserialize<AdminProduct>(res, _json);
+                var (type, rawId) = ResolveAdminTypeAndId(id);
+                var res = await _http.GetStringAsync($"{_baseUrl}/api/admin/products/{type}/{rawId}");
+
+                using var doc = JsonDocument.Parse(res);
+                return MapAdminProductDetail(doc.RootElement, type, id);
             }
             catch (Exception ex)
             {
@@ -285,11 +288,40 @@ namespace VinfastWeb.Services
 
         public async Task<bool> CreateAdminProductAsync(AdminProduct model, string? token)
         {
+            var payload = new
+            {
+                productType = model.ProductType switch
+                {
+                    "Xe máy" => "motorbike",
+                    "Ô tô" => "car",
+                    "Phụ kiện" => "accessory",
+                    "Showroom" => "store",
+                    _ => "motorbike"
+                },
+
+                name = model.ProductName,
+
+                price = model.Price,
+
+                image = string.IsNullOrWhiteSpace(model.PathImage)
+                        ? null
+                        : model.PathImage,
+
+                category = model.ProductType == "Xe máy"
+                            ? model.CategoryGroup?.ToLower()
+                                .Replace(" ", "_")
+                                .Replace("ổ", "o")
+                                .Replace("ấ", "a")
+                            : null,
+
+                is_featured = 0
+            };
+
             var req = CreateRequest(
                 HttpMethod.Post,
                 $"{_baseUrl}/api/admin/products",
                 token,
-                model
+                payload
             );
 
             using (req)
@@ -300,11 +332,22 @@ namespace VinfastWeb.Services
 
         public async Task<bool> UpdateAdminProductAsync(AdminProduct model, string? token)
         {
+            var (type, rawId) = ResolveAdminTypeAndId(model.ProductID);
+
+            var payload = new
+            {
+                name = model.ProductName,
+                price = model.Price,
+                image = string.IsNullOrWhiteSpace(model.PathImage) ? null : model.PathImage,
+                category = type == "motorbike" ? model.CategoryGroup : null,
+                is_featured = 0
+            };
+
             var req = CreateRequest(
                 HttpMethod.Put,
-                $"{_baseUrl}/api/admin/products/{model.ProductID}",
+                $"{_baseUrl}/api/admin/products/{type}/{rawId}",
                 token,
-                model
+                payload
             );
 
             using (req)
@@ -315,9 +358,11 @@ namespace VinfastWeb.Services
 
         public async Task<bool> DeleteAdminProductAsync(int id, string? token)
         {
+            var (type, rawId) = ResolveAdminTypeAndId(id);
+
             var req = CreateRequest(
                 HttpMethod.Delete,
-                $"{_baseUrl}/api/admin/products/{id}",
+                $"{_baseUrl}/api/admin/products/{type}/{rawId}",
                 token
             );
 
@@ -344,9 +389,11 @@ namespace VinfastWeb.Services
 
         public async Task<bool> DuplicateAdminProductAsync(int id, string? token)
         {
+            var (type, rawId) = ResolveAdminTypeAndId(id);
+
             var req = CreateRequest(
                 HttpMethod.Post,
-                $"{_baseUrl}/api/admin/products/duplicate/{id}",
+                $"{_baseUrl}/api/admin/products/duplicate/{type}/{rawId}",
                 token
             );
 
@@ -604,6 +651,84 @@ namespace VinfastWeb.Services
 
             // Nếu DB chỉ lưu tên file
             return $"/images/{folder}/{path.TrimStart('/')}";
+        }
+
+        private (string type, int rawId) ResolveAdminTypeAndId(int productId)
+        {
+            if (productId >= 300000)
+                return ("store", productId - 300000);
+
+            if (productId >= 200000)
+                return ("accessory", productId - 200000);
+
+            if (productId >= 100000)
+                return ("car", productId - 100000);
+
+            return ("motorbike", productId);
+        }
+
+        private AdminProduct MapAdminProductDetail(JsonElement root, string type, int displayId)
+        {
+            string? GetString(string name)
+                => root.TryGetProperty(name, out var p) && p.ValueKind != JsonValueKind.Null
+                    ? p.GetString()
+                    : null;
+
+            decimal GetDecimal(string name)
+            {
+                if (!root.TryGetProperty(name, out var p)) return 0;
+                if (p.ValueKind == JsonValueKind.Number && p.TryGetDecimal(out var d)) return d;
+                if (p.ValueKind == JsonValueKind.String && decimal.TryParse(p.GetString(), out var ds)) return ds;
+                return 0;
+            }
+
+            int GetInt(string name, int fallback = 0)
+            {
+                if (!root.TryGetProperty(name, out var p)) return fallback;
+                if (p.ValueKind == JsonValueKind.Number && p.TryGetInt32(out var i)) return i;
+                if (p.ValueKind == JsonValueKind.String && int.TryParse(p.GetString(), out var si)) return si;
+                return fallback;
+            }
+
+            string productType = type switch
+            {
+                "motorbike" => "Xe máy",
+                "car" => "Ô tô",
+                "accessory" => "Phụ kiện",
+                "store" => "Showroom",
+                _ => "Xe máy"
+            };
+
+            string unit = type switch
+            {
+                "accessory" => "món",
+                "store" => "chi nhánh",
+                _ => "chiếc"
+            };
+
+            string pathImage = GetString("image") ?? "";
+            if (!string.IsNullOrWhiteSpace(pathImage) && !pathImage.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!pathImage.StartsWith("/images/", StringComparison.OrdinalIgnoreCase))
+                    pathImage = "/images/" + pathImage.TrimStart('/');
+            }
+
+            return new AdminProduct
+            {
+                ProductID = displayId,
+                ProductName = GetString("name") ?? "",
+                Price = GetDecimal("price"),
+                PathImage = pathImage,
+                ProductType = productType,
+                CategoryGroup = GetString("category") ?? (type == "store" ? "Showroom" : ""),
+                Description = type == "store"
+                    ? (GetString("address") ?? "")
+                    : (GetString("category") ?? ""),
+                Quantity = type == "store" ? 1 : GetInt("quantity", 1),
+                Unit = unit,
+                CreateDate = null,
+                UpdateDate = null
+            };
         }
     }
 }

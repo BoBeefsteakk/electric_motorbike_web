@@ -57,6 +57,7 @@ wwwroot\images\motorbike\VinFast Zgoo.jpg
 wwwroot\images\news\news1.jpg
 wwwroot\images\news\news2.jpg
 wwwroot\images\news\news3.jpg
+wwwroot\images\products\7856ff5ce8b64a999bbaacc81da35f1d.jpg
 wwwroot\images\store\Vinfast An Khánh.jpg
 wwwroot\images\store\VinFast Eco 247.jpg
 wwwroot\images\store\Vinfast Hoài Đức 3S.jpg
