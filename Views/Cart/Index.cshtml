@@ -1,65 +1,124 @@
 ﻿@model VinfastWeb.ViewModels.CartViewModel
 
 <div class="container my-5">
-    <div class="cart-container shadow-sm">
-        <h2 class="fw-bold mb-4">Giỏ hàng của bạn</h2>
+    <div class="cart-container shadow-sm rounded-4 p-4 p-lg-5 bg-white">
 
-        <table class="table align-middle">
-            <thead class="bg-light">
-                <tr>
-                    <th>Sản phẩm</th>
-                    <th>Giá</th>
-                    <th style="width: 100px;">Số lượng</th>
-                    <th>Tổng</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="cartTable">
-                @foreach (var item in Model.Items)
-                {
-                    <tr data-id="@item.ProductId" data-type="@item.ProductType" class="cart-item-card">
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <img src="@item.Image" class="product-img me-3" onerror="this.src='/images/no-image.png'">
-                                <div>
-                                    <div class="fw-bold">@item.Name</div>
-                                    <small class="text-muted">@item.ProductType</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td>@item.FormattedPrice</td>
-                        <td>
-                            <input type="number" value="@item.Quantity" min="1"
-                                   class="form-control qty-input text-center" />
-                        </td>
-                        <td class="item-total fw-bold">@item.FormattedTotal</td>
-                        <td>
-                            <button class="btn btn-remove shadow-sm">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @if (Model.Items != null && Model.Items.Any())
+        {
+            <div class="mb-4">
+                <h2 class="fw-bold mb-1">Giỏ hàng của bạn</h2>
+                <p class="text-muted mb-0">Chọn sản phẩm bạn muốn thanh toán</p>
+            </div>
 
-        <div class="row justify-content-end mt-4">
-            <div class="col-md-4">
-                <div class="grand-total-box shadow-sm">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Tạm tính:</span>
-                        <span class="fw-bold">@Model.FormattedGrandTotal</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="h5 fw-bold text-uppercase">Tổng cộng:</span>
-                        <span id="grandTotal" class="h4 fw-bold text-primary">@Model.FormattedGrandTotal</span>
-                    </div>
-                    <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold btn-checkout">
-                        THANH TOÁN NGAY <i class="fas fa-arrow-right ms-2"></i>
-                    </button>
-                    <button id="clearCart" class="btn btn-link w-100 text-muted mt-2">Xóa sạch giỏ hàng</button>
+            <div class="cart-actions-top d-flex align-items-center gap-3 flex-wrap mb-3">
+                <div class="form-check m-0">
+                    <input class="form-check-input" type="checkbox" id="selectAllItems" checked />
+                    <label class="form-check-label fw-semibold" for="selectAllItems">
+                        Chọn tất cả
+                    </label>
                 </div>
             </div>
-        </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle cart-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;" class="text-center">Chọn</th>
+                            <th>Sản phẩm</th>
+                            <th style="width: 140px;">Giá</th>
+                            <th style="width: 120px;">Số lượng</th>
+                            <th style="width: 150px;">Tổng</th>
+                            <th style="width: 80px;" class="text-center">Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartTable">
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr data-id="@item.ProductId"
+                                data-type="@item.ProductType"
+                                data-price="@(item.Price)"
+                                class="cart-item-row">
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                           class="form-check-input checkout-item"
+                                           value="@item.ProductId"
+                                           checked />
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="cart-product-image-wrap">
+                                            <img src="@item.Image"
+                                                 class="product-img"
+                                                 alt="@item.Name"
+                                                 onerror="this.src='/images/no-image.png'" />
+                                        </div>
+
+                                        <div>
+                                            <div class="fw-bold product-name">@item.Name</div>
+                                            <small class="text-muted text-uppercase">@item.ProductType</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="fw-semibold text-dark item-price">@item.FormattedPrice</td>
+                                <td>
+                                    <input type="number"
+                                           value="@item.Quantity"
+                                           min="1"
+                                           class="form-control qty-input text-center rounded-pill" />
+                                </td>
+                                <td class="item-total fw-bold text-primary">@item.FormattedTotal</td>
+                                <td class="text-center">
+                                    <button class="btn btn-remove" type="button" title="Xóa sản phẩm">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row justify-content-end mt-4">
+                <div class="col-lg-5 col-xl-4">
+                    <div class="grand-total-box shadow-sm rounded-4 p-4 border-0">
+                        <h5 class="fw-bold mb-3">Tóm tắt thanh toán</h5>
+
+                        <div class="summary-line d-flex justify-content-between mb-2">
+                            <span>Sản phẩm đã chọn:</span>
+                            <span id="selectedCount" class="fw-semibold">0</span>
+                        </div>
+
+                        <div class="summary-line d-flex justify-content-between mb-2">
+                            <span>Tạm tính:</span>
+                            <span id="selectedSubtotal" class="fw-semibold">@Model.FormattedGrandTotal</span>
+                        </div>
+
+                        <div class="summary-line d-flex justify-content-between mb-3">
+                            <span class="fw-bold text-uppercase">Tổng cộng:</span>
+                            <span id="grandTotal" class="h4 fw-bold text-primary mb-0">@Model.FormattedGrandTotal</span>
+                        </div>
+
+                        <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold btn-checkout">
+                            THANH TOÁN SẢN PHẨM ĐÃ CHỌN <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+
+                        <button id="clearCart" class="btn btn-link w-100 text-muted mt-2 text-decoration-none">
+                            Xóa sạch giỏ hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="empty-cart-box text-center py-5">
+                <div class="empty-cart-icon mb-3">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h4 class="fw-bold mb-2">Giỏ hàng trống</h4>
+                <p class="text-muted mb-4">Bạn chưa có sản phẩm nào trong giỏ hàng.</p>
+                <a href="/" class="btn btn-primary rounded-pill px-4 py-2">Tiếp tục mua sắm</a>
+            </div>
+        }
     </div>
 </div>

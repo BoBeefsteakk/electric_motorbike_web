@@ -28,10 +28,12 @@ namespace VinfastWeb.Services
             var cart = GetCart();
             var existing = cart.FirstOrDefault(c =>
                 c.ProductId == item.ProductId && c.ProductType == item.ProductType);
+
             if (existing != null)
                 existing.Quantity += item.Quantity;
             else
                 cart.Add(item);
+
             SaveCart(cart);
         }
 
@@ -47,11 +49,15 @@ namespace VinfastWeb.Services
             var cart = GetCart();
             var item = cart.FirstOrDefault(c =>
                 c.ProductId == productId && c.ProductType == productType);
+
             if (item != null)
             {
-                if (qty <= 0) cart.Remove(item);
-                else item.Quantity = qty;
+                if (qty <= 0)
+                    cart.Remove(item);
+                else
+                    item.Quantity = qty;
             }
+
             SaveCart(cart);
         }
 

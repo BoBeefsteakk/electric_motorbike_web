@@ -56,7 +56,7 @@ namespace VinfastWeb.Controllers
 
             var suggestions = new List<object>();
 
-            // 1. KHI CHƯA GÕ GÌ: Trả về 5 sản phẩm gợi ý mặc định
+            // 1. Trả về 5 sản phẩm gợi ý mặc định
             if (string.IsNullOrWhiteSpace(q))
             {
                 if (motorbikes != null)

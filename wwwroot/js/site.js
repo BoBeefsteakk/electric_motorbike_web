@@ -334,11 +334,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 3. Xóa tất cả
     const clearBtn = document.getElementById("clearCart");
+
     if (clearBtn) {
-        clearBtn.addEventListener("click", async () => {
-            if (confirm("Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?")) {
-                const res = await fetch("/Cart/Clear", { method: "POST" });
-                if (res.ok) location.reload();
+
+        // Tạo modal xác nhận
+        const modal = document.createElement("div");
+        modal.id = "confirmModal";
+
+        modal.innerHTML = `
+        <div class="confirm-box">
+            <h3>Xóa giỏ hàng</h3>
+            <p>Bạn có chắc muốn xóa toàn bộ giỏ hàng?</p>
+
+            <div class="confirm-buttons">
+                <button id="cancelClear">Hủy</button>
+                <button id="confirmClear">Xóa</button>
+            </div>
+        </div>
+    `;
+
+        document.body.appendChild(modal);
+
+        clearBtn.addEventListener("click", () => {
+            modal.style.display = "flex";
+        });
+
+        document.getElementById("cancelClear").addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+        document.getElementById("confirmClear").addEventListener("click", async () => {
+
+            const res = await fetch("/Cart/Clear", {
+                method: "POST"
+            });
+
+            if (res.ok) {
+                location.reload();
             }
         });
     }
@@ -458,4 +490,132 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+});
+document.addEventListener("DOMContentLoaded", () => {
+    const cartTable = document.getElementById("cartTable");
+    const selectAllItems = document.getElementById("selectAllItems");
+    const selectedCount = document.getElementById("selectedCount");
+    const selectedSubtotal = document.getElementById("selectedSubtotal");
+    const grandTotal = document.getElementById("grandTotal");
+    const btnCheckout = document.querySelector(".btn-checkout");
+
+    function formatCurrency(value) {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND"
+        }).format(value);
+    }
+
+    function updateSelectedSummary() {
+        const checkedItems = document.querySelectorAll(".checkout-item:checked");
+        let total = 0;
+
+        checkedItems.forEach(item => {
+            const row = item.closest("tr");
+            const qtyInput = row.querySelector(".qty-input");
+            const price = parseFloat(row.dataset.price || 0);
+            const qty = parseInt(qtyInput?.value || 1);
+
+            total += price * qty;
+        });
+
+        if (selectedCount) selectedCount.innerText = checkedItems.length;
+        if (selectedSubtotal) selectedSubtotal.innerText = formatCurrency(total);
+        if (grandTotal) grandTotal.innerText = formatCurrency(total);
+
+        const allItems = document.querySelectorAll(".checkout-item");
+        if (selectAllItems) {
+            selectAllItems.checked = allItems.length > 0 && checkedItems.length === allItems.length;
+        }
+    }
+
+    if (selectAllItems) {
+        selectAllItems.addEventListener("change", function () {
+            document.querySelectorAll(".checkout-item").forEach(item => {
+                item.checked = this.checked;
+            });
+            updateSelectedSummary();
+        });
+    }
+
+    document.addEventListener("change", function (e) {
+        if (e.target.classList.contains("checkout-item") || e.target.classList.contains("qty-input")) {
+            updateSelectedSummary();
+        }
+    });
+
+    if (btnCheckout) {
+        btnCheckout.addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            const selectedItems = [];
+            document.querySelectorAll(".checkout-item:checked").forEach(item => {
+                const row = item.closest("tr");
+                selectedItems.push({
+                    productId: parseInt(row.dataset.id),
+                    productType: row.dataset.type,
+                    quantity: parseInt(row.querySelector(".qty-input").value || 1)
+                });
+            });
+
+            if (selectedItems.length === 0) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Chưa chọn sản phẩm",
+                    text: "Vui lòng chọn ít nhất một sản phẩm để thanh toán."
+                });
+                return;
+            }
+
+            const result = await Swal.fire({
+                title: "Xác nhận thanh toán?",
+                text: `Bạn đang chọn ${selectedItems.length} sản phẩm để thanh toán.`,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#0d6efd",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Thanh toán ngay",
+                cancelButtonText: "Hủy"
+            });
+
+            if (!result.isConfirmed) return;
+
+            Swal.fire({
+                title: "Đang xử lý...",
+                didOpen: () => Swal.showLoading(),
+                allowOutsideClick: false
+            });
+
+            try {
+                const response = await fetch("/Order/CheckoutSelected", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ items: selectedItems })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Thành công!",
+                        text: "Đơn hàng của bạn đã được tạo.",
+                        timer: 1400,
+                        showConfirmButton: false
+                    });
+
+                    window.location.href = "/Order/Success";
+                } else {
+                    Swal.fire("Lỗi!", data.message || "Không thể thanh toán.", "error");
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire("Thất bại!", "Không thể kết nối đến máy chủ.", "error");
+            }
+        });
+    }
+
+    updateSelectedSummary();
 });
