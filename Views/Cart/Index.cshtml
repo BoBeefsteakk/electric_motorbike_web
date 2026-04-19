@@ -1,65 +1,620 @@
 ﻿@model VinfastWeb.ViewModels.CartViewModel
+@{
+    ViewData["Title"] = "Giỏ Hàng";
+}
 
-<div class="container my-5">
-    <div class="cart-container shadow-sm">
-        <h2 class="fw-bold mb-4">Giỏ hàng của bạn</h2>
+<style>
+    /* ── Cart page – đồng bộ ch- design system ── */
+    .cart-page {
+        padding: 48px 0 80px;
+        min-height: 60vh;
+        background: #f8f9fa;
+    }
 
-        <table class="table align-middle">
-            <thead class="bg-light">
-                <tr>
-                    <th>Sản phẩm</th>
-                    <th>Giá</th>
-                    <th style="width: 100px;">Số lượng</th>
-                    <th>Tổng</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="cartTable">
-                @foreach (var item in Model.Items)
-                {
-                    <tr data-id="@item.ProductId" data-type="@item.ProductType" class="cart-item-card">
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <img src="@item.Image" class="product-img me-3" onerror="this.src='/images/no-image.png'">
-                                <div>
-                                    <div class="fw-bold">@item.Name</div>
-                                    <small class="text-muted">@item.ProductType</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td>@item.FormattedPrice</td>
-                        <td>
-                            <input type="number" value="@item.Quantity" min="1"
-                                   class="form-control qty-input text-center" />
-                        </td>
-                        <td class="item-total fw-bold">@item.FormattedTotal</td>
-                        <td>
-                            <button class="btn btn-remove shadow-sm">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    .cart-page-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #111;
+        margin-bottom: 8px;
+    }
 
-        <div class="row justify-content-end mt-4">
-            <div class="col-md-4">
-                <div class="grand-total-box shadow-sm">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Tạm tính:</span>
-                        <span class="fw-bold">@Model.FormattedGrandTotal</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="h5 fw-bold text-uppercase">Tổng cộng:</span>
-                        <span id="grandTotal" class="h4 fw-bold text-primary">@Model.FormattedGrandTotal</span>
-                    </div>
-                    <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold btn-checkout">
-                        THANH TOÁN NGAY <i class="fas fa-arrow-right ms-2"></i>
-                    </button>
-                    <button id="clearCart" class="btn btn-link w-100 text-muted mt-2">Xóa sạch giỏ hàng</button>
+    .cart-page-sub {
+        color: #888;
+        font-size: 0.95rem;
+        margin-bottom: 36px;
+    }
+
+    /* ── Table card ── */
+    .cart-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(0,0,0,.07);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .cart-table thead th {
+            background: #f8f9fa;
+            padding: 14px 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #888;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cart-table tbody tr {
+            border-bottom: 1px solid #f5f5f5;
+            transition: background .15s;
+        }
+
+            .cart-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .cart-table tbody tr:hover {
+                background: #fafafa;
+            }
+
+        .cart-table td {
+            padding: 16px 20px;
+            vertical-align: middle;
+        }
+
+    /* Product cell */
+    .cart-product-wrap {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .cart-product-img {
+        width: 72px;
+        height: 56px;
+        border-radius: 10px;
+        object-fit: cover;
+        background: #f3f4f6;
+        flex-shrink: 0;
+    }
+
+    .cart-product-name {
+        font-weight: 700;
+        color: #111;
+        font-size: .95rem;
+        margin-bottom: 2px;
+    }
+
+    .cart-product-type {
+        font-size: .78rem;
+        color: #aaa;
+        background: #f3f4f6;
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 20px;
+    }
+
+    /* Price cells */
+    .cart-price {
+        font-weight: 600;
+        color: #333;
+        white-space: nowrap;
+    }
+
+    .cart-item-total {
+        font-weight: 800;
+        color: #1565c0;
+        white-space: nowrap;
+    }
+
+    /* Qty input */
+    .cart-qty-wrap {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 110px;
+    }
+
+    .cart-qty-btn {
+        width: 28px;
+        height: 28px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .9rem;
+        color: #555;
+        transition: all .15s;
+        flex-shrink: 0;
+    }
+
+        .cart-qty-btn:hover {
+            border-color: #1565c0;
+            color: #1565c0;
+            background: #e3f2fd;
+        }
+
+    .qty-input {
+        width: 44px;
+        height: 28px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 8px;
+        text-align: center;
+        font-size: .88rem;
+        font-weight: 700;
+        color: #111;
+        outline: none;
+        transition: border .15s;
+    }
+
+        .qty-input:focus {
+            border-color: #1565c0;
+        }
+
+    /* Remove btn */
+    .cart-remove-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid #f0f0f0;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #bbb;
+        transition: all .2s;
+    }
+
+        .cart-remove-btn:hover {
+            background: #fce4ec;
+            border-color: #e91e63;
+            color: #e91e63;
+        }
+
+    /* ── Summary panel ── */
+    .cart-summary {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(0,0,0,.07);
+        padding: 28px 24px;
+        position: sticky;
+        top: 90px;
+    }
+
+    .cart-summary-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 20px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .cart-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: .92rem;
+        color: #555;
+    }
+
+        .cart-summary-row.total {
+            padding-top: 14px;
+            margin-top: 6px;
+            border-top: 2px solid #f0f0f0;
+            font-size: 1rem;
+            color: #111;
+            font-weight: 800;
+        }
+
+            .cart-summary-row.total .val {
+                font-size: 1.3rem;
+                color: #1565c0;
+                font-weight: 900;
+            }
+
+    /* Checkout btn – khớp ch-hero-btn-primary */
+    .cart-checkout-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 14px;
+        background: #1565c0;
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-size: .95rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background .2s, transform .15s;
+        text-decoration: none;
+    }
+
+        .cart-checkout-btn:hover {
+            background: #0d47a1;
+            transform: translateY(-1px);
+            color: #fff;
+        }
+
+    .cart-clear-btn {
+        display: block;
+        width: 100%;
+        background: none;
+        border: none;
+        color: #bbb;
+        font-size: .85rem;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 12px;
+        padding: 6px;
+        transition: color .15s;
+    }
+
+        .cart-clear-btn:hover {
+            color: #e91e63;
+        }
+
+    /* Voucher row */
+    .cart-voucher-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .cart-voucher-input {
+        flex: 1;
+        height: 38px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 0 12px;
+        font-size: .88rem;
+        outline: none;
+        transition: border .15s;
+    }
+
+        .cart-voucher-input:focus {
+            border-color: #1565c0;
+        }
+
+    .cart-voucher-btn {
+        height: 38px;
+        padding: 0 14px;
+        background: #f3f4f6;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: .82rem;
+        font-weight: 700;
+        cursor: pointer;
+        color: #555;
+        transition: all .15s;
+    }
+
+        .cart-voucher-btn:hover {
+            background: #e3f2fd;
+            border-color: #1565c0;
+            color: #1565c0;
+        }
+
+    /* ── Empty state ── */
+    .cart-empty {
+        text-align: center;
+        padding: 80px 24px;
+    }
+
+    .cart-empty-icon {
+        font-size: 4rem;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+    }
+
+    .cart-empty h3 {
+        font-weight: 800;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .cart-empty p {
+        color: #aaa;
+        margin-bottom: 28px;
+    }
+
+    /* Breadcrumb */
+    .cart-breadcrumb {
+        font-size: .85rem;
+        color: #aaa;
+        margin-bottom: 24px;
+    }
+
+        .cart-breadcrumb a {
+            color: #1565c0;
+            text-decoration: none;
+        }
+
+            .cart-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+        .cart-breadcrumb span {
+            margin: 0 8px;
+        }
+
+    /* Continue shopping */
+    .cart-continue-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #1565c0;
+        font-size: .88rem;
+        font-weight: 600;
+        text-decoration: none;
+        margin-bottom: 16px;
+        transition: gap .15s;
+    }
+
+        .cart-continue-link:hover {
+            gap: 10px;
+            color: #0d47a1;
+        }
+</style>
+
+<section class="cart-page">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <div class="cart-breadcrumb">
+            <a href="/">Trang Chủ</a>
+            <span>/</span>
+            <strong style="color:#333">Giỏ Hàng</strong>
+        </div>
+
+        <h2 class="cart-page-title">Giỏ Hàng Của Bạn</h2>
+        <p class="cart-page-sub">
+            @if (Model.Items.Any())
+            {
+                <text>Bạn có @Model.Items.Count sản phẩm trong giỏ hàng</text>
+            }
+            else
+            {
+                <text>Giỏ hàng hiện đang trống</text>
+            }
+        </p>
+
+        @if (!Model.Items.Any())
+        {
+            <!-- Empty state -->
+            <div class="cart-card">
+                <div class="cart-empty">
+                    <div class="cart-empty-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <h3>Giỏ hàng trống</h3>
+                    <p>Hãy thêm sản phẩm yêu thích của bạn vào giỏ hàng nhé!</p>
+                    <a href="/Products" class="ch-hero-btn-primary" style="display:inline-flex;gap:8px;align-items:center">
+                        Khám phá xe ngay <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                <!-- Left: Cart items -->
+                <div class="col-lg-8">
+
+                    <a href="/Products" class="cart-continue-link">
+                        <i class="fas fa-arrow-left"></i> Tiếp tục mua sắm
+                    </a>
+
+                    <div class="cart-card">
+                        <table class="cart-table" id="cartTable">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Tổng</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr data-id="@item.ProductId" data-type="@item.ProductType" class="cart-row">
+                                        <td>
+                                            <div class="cart-product-wrap">
+                                                <img src="@item.Image"
+                                                     class="cart-product-img"
+                                                     alt="@item.Name"
+                                                     onerror="this.src='/images/no-image.png'" />
+                                                <div>
+                                                    <div class="cart-product-name">@item.Name</div>
+                                                    <span class="cart-product-type">@item.ProductType</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="cart-price">@item.FormattedPrice</div>
+                                        </td>
+                                        <td>
+                                            <div class="cart-qty-wrap">
+                                                <button class="cart-qty-btn qty-minus" type="button">
+                                                    <i class="fas fa-minus" style="font-size:.7rem"></i>
+                                                </button>
+                                                <input type="number"
+                                                       value="@item.Quantity"
+                                                       min="1"
+                                                       class="qty-input" />
+                                                <button class="cart-qty-btn qty-plus" type="button">
+                                                    <i class="fas fa-plus" style="font-size:.7rem"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="cart-item-total item-total">@item.FormattedTotal</div>
+                                        </td>
+                                        <td>
+                                            <button class="cart-remove-btn btn-remove" type="button" title="Xoá">
+                                                <i class="fas fa-times" style="font-size:.8rem"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right: Summary -->
+                <div class="col-lg-4">
+                    <div class="cart-summary">
+                        <div class="cart-summary-title">
+                            <i class="fas fa-receipt" style="color:#1565c0;margin-right:8px"></i>
+                            Tóm Tắt Đơn Hàng
+                        </div>
+
+                        <!-- Voucher -->
+                        <div class="cart-voucher-row">
+                            <input type="text" class="cart-voucher-input" placeholder="Nhập mã giảm giá..." id="voucherInput" />
+                            <button class="cart-voucher-btn" onclick="applyVoucher()">Áp dụng</button>
+                        </div>
+
+                        <div class="cart-summary-row">
+                            <span>Tạm tính</span>
+                            <span class="fw-bold">@Model.FormattedGrandTotal</span>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Phí vận chuyển</span>
+                            <span style="color:#388e3c;font-weight:700">Miễn phí</span>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Giảm giá</span>
+                            <span id="discountVal">— 0 ₫</span>
+                        </div>
+
+                        <div class="cart-summary-row total">
+                            <span>Tổng cộng</span>
+                            <span class="val" id="grandTotal">@Model.FormattedGrandTotal</span>
+                        </div>
+
+                        <a href="/Checkout" class="cart-checkout-btn btn-checkout">
+                            Thanh Toán Ngay <i class="fas fa-arrow-right"></i>
+                        </a>
+
+                        <button id="clearCart" class="cart-clear-btn">
+                            <i class="fas fa-trash-alt" style="font-size:.8rem;margin-right:4px"></i>
+                            Xóa sạch giỏ hàng
+                        </button>
+
+                        <!-- Trust badges -->
+                        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0">
+                            <div style="text-align:center;font-size:.72rem;color:#aaa">
+                                <i class="fas fa-shield-alt" style="display:block;font-size:1.1rem;color:#388e3c;margin-bottom:4px"></i>
+                                Bảo mật<br>thanh toán
+                            </div>
+                            <div style="text-align:center;font-size:.72rem;color:#aaa">
+                                <i class="fas fa-undo" style="display:block;font-size:1.1rem;color:#1565c0;margin-bottom:4px"></i>
+                                Đổi trả<br>30 ngày
+                            </div>
+                            <div style="text-align:center;font-size:.72rem;color:#aaa">
+                                <i class="fas fa-headset" style="display:block;font-size:1.1rem;color:#f57c00;margin-bottom:4px"></i>
+                                Hỗ trợ<br>24/7
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
     </div>
-</div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // ── Qty +/- buttons ──
+            document.querySelectorAll('.qty-minus').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const input = this.closest('.cart-qty-wrap').querySelector('.qty-input');
+                    if (parseInt(input.value) > 1) {
+                        input.value = parseInt(input.value) - 1;
+                        input.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+
+            document.querySelectorAll('.qty-plus').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const input = this.closest('.cart-qty-wrap').querySelector('.qty-input');
+                    input.value = parseInt(input.value) + 1;
+                    input.dispatchEvent(new Event('change'));
+                });
+            });
+
+            // ── Qty change → update total ──
+            document.querySelectorAll('.qty-input').forEach(input => {
+                input.addEventListener('change', function () {
+                    const row = this.closest('tr');
+                    const priceText = row.querySelector('.cart-price').textContent
+                        .replace(/[^0-9]/g, '');
+                    const price = parseInt(priceText) || 0;
+                    const qty   = parseInt(this.value) || 1;
+                    const total = price * qty;
+
+                    row.querySelector('.item-total').textContent =
+                        total.toLocaleString('vi-VN') + ' ₫';
+
+                    recalcGrandTotal();
+                });
+            });
+
+            // ── Remove row ──
+            document.querySelectorAll('.btn-remove').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    row.style.transition = 'opacity .25s, transform .25s';
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(20px)';
+                    setTimeout(() => { row.remove(); recalcGrandTotal(); }, 250);
+                });
+            });
+
+            // ── Clear all ──
+            const clearBtn = document.getElementById('clearCart');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    document.querySelectorAll('.cart-row').forEach(row => row.remove());
+                    recalcGrandTotal();
+                });
+            }
+
+            function recalcGrandTotal() {
+                let total = 0;
+                document.querySelectorAll('.item-total').forEach(el => {
+                    total += parseInt(el.textContent.replace(/[^0-9]/g, '')) || 0;
+                });
+                const formatted = total.toLocaleString('vi-VN') + ' ₫';
+                const el = document.getElementById('grandTotal');
+                if (el) el.textContent = formatted;
+            }
+        });
+
+        function applyVoucher() {
+            const code = document.getElementById('voucherInput').value.trim().toUpperCase();
+            if (!code) return;
+            // Placeholder — tích hợp API voucher tại đây
+            alert('Mã "' + code + '" chưa được nhận diện. Vui lòng thử lại!');
+        }
+    </script>
+}

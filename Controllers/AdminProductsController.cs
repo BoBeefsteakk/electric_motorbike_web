@@ -119,7 +119,7 @@ namespace VinfastWeb.Controllers
             if (model.Price <= 0)
                 ModelState.AddModelError("Price", "Giá phải lớn hơn 0.");
 
-            if (model.ProductType?.Trim() != "Xe máy")
+            if ((model.ProductType ?? "").Trim().ToLower() != "motorbike")
                 model.CategoryGroup = "";
 
             if (model.Quantity <= 0)
@@ -148,7 +148,7 @@ namespace VinfastWeb.Controllers
             model.UpdateDate ??= DateTime.Today;
 
             var token = GetToken();
-            var ok = await _api.CreateAdminProductAsync(model, token);
+            var (ok, message) = await _api.CreateAdminProductAsync(model, token);
 
             if (ok)
             {
@@ -156,8 +156,8 @@ namespace VinfastWeb.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["Error"] = "Tạo sản phẩm thất bại. Vui lòng thử lại.";
-            return View(model);
+            TempData["Error"] = message ?? "Tạo sản phẩm thất bại. Vui lòng thử lại.";
+            return View(model); 
         }
 
         [HttpGet]
@@ -224,7 +224,7 @@ namespace VinfastWeb.Controllers
                 model.UpdateDate = oldItem.UpdateDate ?? DateTime.Today;
 
             var token = GetToken();
-            var ok = await _api.UpdateAdminProductAsync(model, token);
+            var (ok, message) = await _api.UpdateAdminProductAsync(model, token);
 
             if (ok)
             {
@@ -232,7 +232,7 @@ namespace VinfastWeb.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["Error"] = "Cập nhật thất bại. Vui lòng thử lại.";
+            TempData["Error"] = message ?? "Cập nhật thất bại. Vui lòng thử lại.";
             return View(model);
         }
 
@@ -254,16 +254,16 @@ namespace VinfastWeb.Controllers
             var token = GetToken();
             var original = await _api.GetAdminProductAsync(id);
 
-            var ok = await _api.DuplicateAdminProductAsync(id, token);
+            var (ok, message) = await _api.DuplicateAdminProductAsync(id, token);
 
             if (ok)
             {
                 var name = original?.ProductName ?? $"#{id}";
-                TempData["Success"] = $"Đã tạo bản sao của \"{name}\". Bản sao được đặt tên \"Bản sao_{name}\".";
+                TempData["Success"] = message ?? $"Đã tạo bản sao của \"{name}\".";
             }
             else
             {
-                TempData["Error"] = "Sao chép thất bại. Vui lòng thử lại.";
+                TempData["Error"] = message ?? "Sao chép thất bại.";
             }
 
             return RedirectToAction(nameof(Index), new
@@ -292,12 +292,12 @@ namespace VinfastWeb.Controllers
             }
 
             var token = GetToken();
-            var ok = await _api.DeleteAdminProductAsync(id, token);
+            var (ok, message) = await _api.DeleteAdminProductAsync(id, token);
 
             if (ok)
                 TempData["Success"] = $"Đã xóa sản phẩm #{id} thành công!";
             else
-                TempData["Error"] = $"Xóa sản phẩm #{id} thất bại. Vui lòng thử lại.";
+                TempData["Error"] = message ?? $"Xóa sản phẩm #{id} thất bại. Vui lòng thử lại.";
 
             return RedirectToAction(nameof(Index), new
             {
@@ -340,12 +340,17 @@ namespace VinfastWeb.Controllers
             }
 
             var token = GetToken();
+
             var ok = await _api.DuplicateManyAdminProductsAsync(ids, token);
 
             if (ok)
+            {
                 TempData["Success"] = $"Đã sao chép {ids.Count} sản phẩm thành công!";
+            }
             else
-                TempData["Error"] = "Sao chép nhiều sản phẩm thất bại. Vui lòng thử lại.";
+            {
+                TempData["Error"] = "Sao chép nhiều sản phẩm thất bại.";
+            }
 
             return RedirectToAction(nameof(Index));
         }

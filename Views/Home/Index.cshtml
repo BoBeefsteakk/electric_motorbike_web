@@ -132,6 +132,11 @@
             <span class="ch-tab" data-filter="trung_cap" onclick="filterProducts('trung_cap',this)">Trung Cấp</span>
             <span class="ch-tab" data-filter="cao_cap" onclick="filterProducts('cao_cap',this)">Cao Cấp</span>
             <span class="ch-tab" data-filter="o_to" onclick="filterProducts('o_to',this)">Ô Tô</span>
+            <span class="ch-tab"
+                  data-filter="phu_kien"
+                  onclick="filterProducts('phu_kien',this)">
+                Phụ Kiện
+            </span>
         </div>
 
         <!-- Xe máy cards - ẩn/hiện theo tab -->
@@ -306,15 +311,84 @@
 
                         <div class="ch-product-footer">
                             <div class="ch-price">@item.FormattedPrice</div>
-                            <a href="/Cars" class="ch-view-btn">
-                                Xem chi tiết <i class="fas fa-arrow-right" style="font-size:11px"></i>
+                            <a asp-controller="Cars"
+                               asp-action="Detail"
+                               asp-route-id="@item.Id"
+                               class="ch-view-btn">
+                                Xem chi tiết
+                                <i class="fas fa-arrow-right" style="font-size:11px"></i>
                             </a>
                         </div>
                     </div>
                 </div>
                         }
         </div>
+        <div class="ch-product-grid" id="grid-phu_kien" style="display:none">
+            @foreach (var item in Model.FeaturedAccessories.Take(4))
+            {
+                <div class="ch-product-card">
 
+                    <div class="ch-product-img">
+                        <div class="ch-product-badge-wrap">
+                            <span class="ch-badge green">Phụ Kiện</span>
+                        </div>
+
+                        <button type="button"
+                                class="ch-wish"
+                                data-product-id="@item.Id"
+                                data-product-name="@item.Name">
+                            <i class="far fa-heart"></i>
+                        </button>
+
+                        <img src="@item.ImageUrl"
+                             alt="@item.Name"
+                             onerror="this.onerror=null;this.src='/images/no-image.png';" />
+                    </div>
+
+                    <div class="ch-product-body">
+                        <div class="ch-product-name">@item.Name</div>
+
+                        <div class="ch-product-sub">
+                            Phụ Kiện Chính Hãng
+                        </div>
+
+                        <div class="ch-product-specs">
+                            <div class="ch-spec">
+                                <i class="fas fa-tools"></i>
+                                <span>Phụ kiện</span>
+                            </div>
+
+                            <div class="ch-spec">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Bảo hành</span>
+                            </div>
+
+                            <div class="ch-spec">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Chính hãng</span>
+                            </div>
+                        </div>
+
+                        <div class="ch-product-footer">
+                            <div class="ch-price">
+                                @item.FormattedPrice
+                            </div>
+
+                            <a asp-controller="Accessories"
+                               asp-action="Detail"
+                               asp-route-id="@item.Id"
+                               class="ch-view-btn">
+                                Xem chi tiết
+                                <i class="fas fa-arrow-right"
+                                   style="font-size:11px"></i>
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
         <div class="ch-center">
             <a href="/Products" class="ch-view-all" id="viewAllLink">Xem tất cả xe máy <i class="fas fa-arrow-right"></i></a>
         </div>
@@ -539,15 +613,31 @@
 
           // Cập nhật link "Xem tất cả"
           const link = document.getElementById('viewAllLink');
-          if (filter === 'o_to') {
-            link.href = '/Cars';
-            link.innerHTML = 'Xem tất cả ô tô <i class="fas fa-arrow-right"></i>';
-            document.getElementById('grid-o_to').style.display = 'grid';
-          } else {
-            link.href = '/Products?category=' + filter;
-            const labels = { pho_thong: 'xe phổ thông', trung_cap: 'xe trung cấp', cao_cap: 'xe cao cấp' };
-            link.innerHTML = 'Xem tất cả ' + (labels[filter] || 'xe') + ' <i class="fas fa-arrow-right"></i>';
-          }
+                  if (filter === 'o_to') {
+
+            link.href='/Cars';
+            link.innerHTML='Xem tất cả ô tô <i class="fas fa-arrow-right"></i>';
+
+        }
+        else if(filter==='phu_kien'){
+
+            link.href='/Accessories';
+            link.innerHTML='Xem tất cả phụ kiện <i class="fas fa-arrow-right"></i>';
+
+        }
+        else{
+
+           link.href='/Products?category='+filter;
+
+           const labels={
+              pho_thong:'xe phổ thông',
+              trung_cap:'xe trung cấp',
+              cao_cap:'xe cao cấp'
+           };
+
+           link.innerHTML='Xem tất cả '+(labels[filter]||'xe')
+              +' <i class="fas fa-arrow-right"></i>';
+        }
         }
 
         // Search bar

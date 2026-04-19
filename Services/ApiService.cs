@@ -146,7 +146,7 @@ namespace VinfastWeb.Services
 
         public async Task<Motorbike?> GetMotorbikeAsync(int id)
         {
-            return await GetAsync<Motorbike>($"{_baseUrl}/api/products/{id}");
+            return await GetAsync<Motorbike>($"{_baseUrl}/api/products/motorbike/{id}");
         }
 
         public async Task<Store?> GetStoreAsync(int id)
@@ -274,8 +274,45 @@ namespace VinfastWeb.Services
         {
             try
             {
-                var res = await _http.GetStringAsync($"{_baseUrl}/api/admin/products/{id}");
-                return JsonSerializer.Deserialize<AdminProduct>(res, _json);
+                var (type, rawId) = DecodeAdminProductId(id);
+
+                var res = await _http.GetStringAsync($"{_baseUrl}/api/admin/products/{type}/{rawId}");
+                var doc = JsonDocument.Parse(res);
+                var root = doc.RootElement;
+
+                string productType = type switch
+                {
+                    "motorbike" => "Xe máy",
+                    "car" => "Ô tô",
+                    "accessory" => "Phụ kiện",
+                    "store" => "Showroom",
+                    _ => "Xe máy"
+                };
+
+                int productId = type switch
+                {
+                    "car" => 100000 + root.GetProperty("id").GetInt32(),
+                    "accessory" => 200000 + root.GetProperty("id").GetInt32(),
+                    "store" => 300000 + root.GetProperty("id").GetInt32(),
+                    _ => root.GetProperty("id").GetInt32()
+                };
+
+                return new AdminProduct
+                {
+                    ProductID = productId,
+                    ProductName = root.TryGetProperty("name", out var name) ? name.GetString() ?? "" : "",
+                    Price = root.TryGetProperty("price", out var price) && price.ValueKind != JsonValueKind.Null ? price.GetDecimal() : 0,
+                    PathImage = root.TryGetProperty("image", out var image) ? image.GetString() ?? "" : "",
+                    ProductType = productType,
+                    CategoryGroup = root.TryGetProperty("category", out var category) ? category.GetString() ?? "" : "",
+                    Description = root.TryGetProperty("address", out var address)
+                        ? address.GetString() ?? ""
+                        : (root.TryGetProperty("category", out var cat2) ? cat2.GetString() ?? "" : ""),
+                    Quantity = 1,
+                    Unit = type == "store" ? "chi nhánh" : "chiếc",
+                    CreateDate = DateTime.Today,
+                    UpdateDate = DateTime.Today
+                };
             }
             catch (Exception ex)
             {
@@ -284,47 +321,149 @@ namespace VinfastWeb.Services
             }
         }
 
-        public async Task<bool> CreateAdminProductAsync(AdminProduct model, string? token)
+        public async Task<(bool success, string? message)> CreateAdminProductAsync(AdminProduct model, string? token)
         {
+            object payload;
+
+            switch ((model.ProductType ?? "").Trim().ToLower())
+            {
+                case "motorbike":
+                    payload = new
+                    {
+                        productType = "motorbike",
+                        name = model.ProductName,
+                        price = model.Price,
+                        image = model.PathImage ?? "",
+                        category = model.CategoryGroup ?? "",
+                        is_featured = 1
+                    };
+                    break;
+
+                case "car":
+                    payload = new
+                    {
+                        productType = "car",
+                        name = model.ProductName,
+                        price = model.Price,
+                        image = model.PathImage ?? "",
+                        category = model.CategoryGroup ?? "dong_co_dien"
+                    };
+                    break;
+
+                case "accessory":
+                    payload = new
+                    {
+                        productType = "accessory",
+                        name = model.ProductName,
+                        price = model.Price,
+                        image = model.PathImage ?? "",
+                        category = model.CategoryGroup ?? "phu_kien",
+                        is_featured = 1
+                    };
+                    break;
+
+                case "store":
+                    payload = new
+                    {
+                        productType = "store",
+                        name = model.ProductName,
+                        rating = "5.0",
+                        address = model.Description ?? "Địa chỉ đang cập nhật",
+                        image = model.PathImage ?? "",
+                        route = ""
+                    };
+                    break;
+
+                default:
+                    return (false, "Loại sản phẩm không hợp lệ.");
+            }
+
             var req = CreateRequest(
                 HttpMethod.Post,
                 $"{_baseUrl}/api/admin/products",
                 token,
-                model
+                payload
             );
 
             using (req)
             {
-                return await SendAsync(req);
+                return await SendWithMessageAsync(req);
             }
         }
 
-        public async Task<bool> UpdateAdminProductAsync(AdminProduct model, string? token)
+        public async Task<(bool success, string? message)> UpdateAdminProductAsync(AdminProduct model, string? token)
         {
+            var type = GetAdminType(model);
+            var (_, rawId) = DecodeAdminProductId(model.ProductID);
+
+            object payload = type switch
+            {
+                "motorbike" => new
+                {
+                    name = model.ProductName,
+                    price = model.Price,
+                    image = model.PathImage ?? "",
+                    category = model.CategoryGroup ?? "",
+                    is_featured = 1
+                },
+                "car" => new
+                {
+                    name = model.ProductName,
+                    price = model.Price,
+                    image = model.PathImage ?? "",
+                    category = model.CategoryGroup ?? "dong_co_dien"
+                },
+                "accessory" => new
+                {
+                    name = model.ProductName,
+                    price = model.Price,
+                    image = model.PathImage ?? "",
+                    category = model.CategoryGroup ?? "phu_kien",
+                    is_featured = 1
+                },
+                "store" => new
+                {
+                    name = model.ProductName,
+                    rating = "5.0",
+                    address = model.Description ?? "Địa chỉ đang cập nhật",
+                    image = model.PathImage ?? "",
+                    route = ""
+                },
+                _ => new
+                {
+                    name = model.ProductName,
+                    price = model.Price,
+                    image = model.PathImage ?? "",
+                    category = model.CategoryGroup ?? ""
+                }
+            };
+
             var req = CreateRequest(
                 HttpMethod.Put,
-                $"{_baseUrl}/api/admin/products/{model.ProductID}",
+                $"{_baseUrl}/api/admin/products/{type}/{rawId}",
                 token,
-                model
+                payload
             );
 
             using (req)
             {
-                return await SendAsync(req);
+                return await SendWithMessageAsync(req);
             }
         }
 
-        public async Task<bool> DeleteAdminProductAsync(int id, string? token)
+        public async Task<(bool success, string? message)> DeleteAdminProductAsync(int id, string? token)
         {
+            var (type, rawId) = DecodeAdminProductId(id);
+
             var req = CreateRequest(
                 HttpMethod.Delete,
-                $"{_baseUrl}/api/admin/products/{id}",
+                $"{_baseUrl}/api/admin/products/{type}/{rawId}",
                 token
             );
 
             using (req)
             {
-                return await SendAsync(req);
+                return await SendWithMessageAsync(req);
             }
         }
 
@@ -343,17 +482,19 @@ namespace VinfastWeb.Services
             }
         }
 
-        public async Task<bool> DuplicateAdminProductAsync(int id, string? token)
+        public async Task<(bool success, string? message)> DuplicateAdminProductAsync(int id, string? token)
         {
+            var (type, rawId) = DecodeAdminProductId(id);
+
             var req = CreateRequest(
                 HttpMethod.Post,
-                $"{_baseUrl}/api/admin/products/duplicate/{id}",
+                $"{_baseUrl}/api/admin/products/duplicate/{type}/{rawId}",
                 token
             );
 
             using (req)
             {
-                return await SendAsync(req);
+                return await SendWithMessageAsync(req);
             }
         }
 
@@ -637,6 +778,31 @@ namespace VinfastWeb.Services
                 Console.WriteLine($"Lỗi tìm kiếm: {ex.Message}");
                 return new SearchViewModel { Query = keyword };
             }
+        }
+        private string GetAdminType(AdminProduct model)
+        {
+            var t = (model.ProductType ?? "").Trim().ToLower();
+
+            return t switch
+            {
+                "motorbike" => "motorbike",
+                "xe máy" => "motorbike",
+                "car" => "car",
+                "ô tô" => "car",
+                "accessory" => "accessory",
+                "phụ kiện" => "accessory",
+                "store" => "store",
+                "showroom" => "store",
+                _ => "motorbike"
+            };
+        }
+
+        private (string type, int rawId) DecodeAdminProductId(int productId)
+        {
+            if (productId >= 300000) return ("store", productId - 300000);
+            if (productId >= 200000) return ("accessory", productId - 200000);
+            if (productId >= 100000) return ("car", productId - 100000);
+            return ("motorbike", productId);
         }
     }
 }

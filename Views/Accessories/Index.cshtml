@@ -47,7 +47,12 @@
                             </div>
                             <div class="pd-card-footer">
                                 <div class="pd-card-price">@item.FormattedPrice</div>
-                                <div class="pd-card-btn">Xem chi tiết <i class="fas fa-arrow-right"></i></div>
+                                <a asp-controller="Accessories"
+                                   asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="pd-card-btn">
+                                    Xem chi tiết <i class="fas fa-arrow-right"></i>
+                                </a>
                             </div>
                         </div>
                     </div>

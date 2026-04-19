@@ -63,7 +63,7 @@
             <div class="pd-grid" id="productGrid">
                 @foreach (var item in Model.Cars)
                 {
-                    <a href="/Cars" class="pd-card" data-price="@item.Price" data-name="@item.Name">
+                    <div class="pd-card" data-price="@item.Price" data-name="@item.Name">
                         <div class="pd-card-img">
                             <img src="@item.ImageUrl" alt="@item.Name" loading="lazy"
                                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 4 3%22%3E%3Crect fill=%22%23f3f4f6%22 width=%224%22 height=%223%22/%3E%3C/svg%3E'" />
@@ -73,10 +73,12 @@
                     </div>
                     <div class="pd-card-wish"><i class="far fa-heart"></i></div>
                 </div>
-                <div class="pd-card-body">
-                    <div class="pd-card-cat">VinFast · Ô Tô</div>
-                    <div class="pd-card-name">@item.Name</div>
-                    <div class="pd-card-specs">
+
+                        <div class="pd-card-body">
+                            <div class="pd-card-cat">VinFast · Ô Tô</div>
+                            <div class="pd-card-name">@item.Name</div>
+
+                            <div class="pd-card-specs">
                         @if (item.Category == "dong_co_dien")
                                 {
                                     <span><i class="fas fa-charging-station"></i> Điện</span>
@@ -89,12 +91,19 @@
                                 }
                                 <span><i class="fas fa-shield-alt"></i> BH 3 năm</span>
                             </div>
+
                             <div class="pd-card-footer">
                                 <div class="pd-card-price">@item.FormattedPrice</div>
-                                <div class="pd-card-btn">Xem chi tiết <i class="fas fa-arrow-right"></i></div>
+
+                                <a asp-controller="Cars"
+                                   asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="pd-card-btn">
+                                    Xem chi tiết <i class="fas fa-arrow-right"></i>
+                                </a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 }
             </div>
         }

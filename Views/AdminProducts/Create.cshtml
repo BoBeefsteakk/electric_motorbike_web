@@ -81,10 +81,10 @@
                             <label asp-for="ProductType">Loại sản phẩm <span class="required">*</span></label>
                             <select asp-for="ProductType" id="productTypeSelect">
                                 <option value="">-- Chọn loại --</option>
-                                <option value="Xe máy">Xe máy</option>
-                                <option value="Ô tô">Ô tô</option>
-                                <option value="Phụ kiện">Phụ kiện</option>
-                                <option value="Showroom">Showroom</option>
+                                <option value="motorbike">Xe máy</option>
+                                <option value="car">Ô tô</option>
+                                <option value="accessory">Phụ kiện</option>
+                                <option value="store">Showroom</option>
                             </select>
                             <span asp-validation-for="ProductType" class="text-danger"></span>
                         </div>
@@ -175,11 +175,12 @@
         document.addEventListener("DOMContentLoaded", function () {
             const productTypeSelect = document.getElementById("productTypeSelect");
             const categoryGroupWrapper = document.getElementById("categoryGroupWrapper");
-            const categoryGroupSelect = document.querySelector('[name="CategoryGroup"]');
+            const categoryGroupSelect = document.getElementById("categoryGroupSelect");
 
             function toggleCategoryGroup() {
-                const value = productTypeSelect.value?.trim().toLowerCase();
-                if (value === "xe máy") {
+                const value = (productTypeSelect?.value || "").trim().toLowerCase();
+
+                if (value === "motorbike") {
                     categoryGroupWrapper.style.display = "block";
                 } else {
                     categoryGroupWrapper.style.display = "none";
@@ -188,7 +189,7 @@
             }
 
             toggleCategoryGroup();
-            productTypeSelect.addEventListener("change", toggleCategoryGroup);
+            productTypeSelect?.addEventListener("change", toggleCategoryGroup);
         });
     </script>
 }

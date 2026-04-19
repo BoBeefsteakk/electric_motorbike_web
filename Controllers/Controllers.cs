@@ -6,42 +6,7 @@ using VinfastWeb.ViewModels;
 namespace VinfastWeb.Controllers
 {
     // ── CARS ──────────────────────────────────────────────────────────────────
-    public class CarsController : Controller
-    {
-        private readonly ApiService _api;
-        public CarsController(ApiService api) => _api = api;
-
-        public async Task<IActionResult> Index(string? category)
-        {
-            var all = await _api.GetCarsAsync();
-            var filtered = string.IsNullOrEmpty(category)
-                ? all
-                : all.Where(c => c.Category == category).ToList();
-
-            var label = category switch
-            {
-                "dong_co_dien" => "Xe Điện",
-                "dong_co_xang" => "Xe Xăng",
-                "dong_xe_dich_vu" => "Xe Dịch Vụ",
-                _ => "Tất Cả Ô Tô"
-            };
-
-            return View(new CarsViewModel { Cars = filtered, Category = category, CategoryLabel = label });
-        }
-    }
-
-    // ── ACCESSORIES ───────────────────────────────────────────────────────────
-    public class AccessoriesController : Controller
-    {
-        private readonly ApiService _api;
-        public AccessoriesController(ApiService api) => _api = api;
-
-        public async Task<IActionResult> Index()
-        {
-            var items = await _api.GetAccessoriesAsync();
-            return View(items);
-        }
-    }
+ 
 
     // ── STORES ────────────────────────────────────────────────────────────────
     public class StoresController : Controller

@@ -6,6 +6,7 @@ namespace VinfastWeb.ViewModels
     {
         public List<Motorbike> FeaturedMotorbikes { get; set; } = new();
         public List<Car> FeaturedCars { get; set; } = new();
+        public List<Accessory> FeaturedAccessories { get; set; } = new();
         public List<Store> Stores { get; set; } = new();
         public List<Voucher> Vouchers { get; set; } = new();
     }
@@ -55,4 +56,5 @@ namespace VinfastWeb.ViewModels
         public string ConfirmPassword { get; set; } = "";
         public string? ErrorMessage { get; set; }
     }
+
 }
