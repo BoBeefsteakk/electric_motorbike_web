@@ -101,21 +101,14 @@
 
             <!-- RIGHT ACTIONS -->
             <div class="vf-nav-actions">
-                <div class="search-wrapper-dynamic">
-                    <button type="button" id="searchIconBtn" class="vf-nav-icon" title="Tìm kiếm">
-                        <i class="fas fa-search"></i>
-                    </button>
-
-                    <div id="dynamicSearchBar" class="search-bar-expandable">
+                <div class="search-wrapper-dynamic search-wrapper-always-open">
+                    <div id="dynamicSearchBar" class="search-bar-expandable always-visible">
                         <div class="search-input-box">
                             <i class="fas fa-search"></i>
                             <input type="text"
                                    id="globalSearchInput"
                                    placeholder="Tìm kiếm xe, ô tô, phụ kiện..."
                                    autocomplete="off" />
-                            <button type="button" id="closeSearchBtn" aria-label="Đóng tìm kiếm">
-                                <i class="fas fa-times"></i>
-                            </button>
                         </div>
 
                         <div id="globalSuggestionBox" class="dynamic-results"></div>
@@ -241,173 +234,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        (() => {
-            const searchBtn = document.getElementById("searchIconBtn");
-            const searchBar = document.getElementById("dynamicSearchBar");
-            const searchInput = document.getElementById("globalSearchInput");
-            const closeBtn = document.getElementById("closeSearchBtn");
-            const suggestionBox = document.getElementById("globalSuggestionBox");
-
-            if (!searchBtn || !searchBar || !searchInput || !closeBtn || !suggestionBox) return;
-
-            let allItems = [];
-            let loaded = false;
-
-            const normalizeArray = (res) => {
-                if (Array.isArray(res)) return res;
-                if (Array.isArray(res?.data)) return res.data;
-                return [];
-            };
-
-            const mapMotorbike = (i) => ({
-                id: i.id,
-                name: i.name,
-                image: i.image,
-                type: "motorbike",
-                url: `/Products/Detail/${i.id}`
-            });
-
-            const mapCar = (i) => ({
-                id: i.id,
-                name: i.name,
-                image: i.image,
-                type: "car",
-                url: `/Cars`
-            });
-
-            const mapAccessory = (i) => ({
-                id: i.id,
-                name: i.name,
-                image: i.image,
-                type: "accessory",
-                url: `/Accessories`
-            });
-
-            const getImageUrl = (item) => {
-                if (!item.image) return "/images/no-image.png";
-
-                if (item.type === "motorbike" || item.type === "car") {
-                    return `http://localhost:5000/images/${item.image}`;
-                }
-
-                return `http://localhost:5000/${item.image}`;
-            };
-
-            const renderSuggestions = (items, keyword) => {
-                if (!keyword.trim()) {
-                    suggestionBox.innerHTML = "";
-                    suggestionBox.classList.remove("show");
-                    return;
-                }
-
-                if (!items.length) {
-                    suggestionBox.innerHTML = `
-                        <div class="dynamic-empty">
-                            Không tìm thấy kết quả cho "<strong>${keyword}</strong>"
-                        </div>
-                    `;
-                    suggestionBox.classList.add("show");
-                    return;
-                }
-
-                suggestionBox.innerHTML = items.slice(0, 8).map(item => `
-                    <a href="${item.url}" class="dynamic-result-item">
-                        <img src="${getImageUrl(item)}"
-                             alt="${item.name}"
-                             onerror="this.onerror=null;this.src='/images/no-image.png';" />
-                        <div class="dynamic-result-info">
-                            <div class="dynamic-result-name">${item.name}</div>
-                            <div class="dynamic-result-type">
-                                ${item.type === "motorbike" ? "Xe máy" :
-                                  item.type === "car" ? "Ô tô" : "Phụ kiện"}
-                            </div>
-                        </div>
-                    </a>
-                `).join("");
-
-                suggestionBox.classList.add("show");
-            };
-
-            const loadData = async () => {
-                if (loaded) return;
-
-                try {
-                    const [motoRes, carRes, accRes] = await Promise.all([
-                        fetch("http://localhost:5000/api/products").then(r => r.json()).catch(() => []),
-                        fetch("http://localhost:5000/api/cars").then(r => r.json()).catch(() => []),
-                        fetch("http://localhost:5000/api/accessories").then(r => r.json()).catch(() => [])
-                    ]);
-
-                    const motorbikes = normalizeArray(motoRes).map(mapMotorbike);
-                    const cars = normalizeArray(carRes).map(mapCar);
-                    const accessories = normalizeArray(accRes).map(mapAccessory);
-
-                    allItems = [...motorbikes, ...cars, ...accessories];
-                    loaded = true;
-                } catch (err) {
-                    console.error("Search load error:", err);
-                }
-            };
-
-            const openSearch = async () => {
-                searchBar.classList.add("open");
-                await loadData();
-                setTimeout(() => searchInput.focus(), 50);
-            };
-
-            const closeSearch = () => {
-                searchBar.classList.remove("open");
-                suggestionBox.classList.remove("show");
-                suggestionBox.innerHTML = "";
-                searchInput.value = "";
-            };
-
-            searchBtn.addEventListener("click", async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
-                if (searchBar.classList.contains("open")) {
-                    closeSearch();
-                } else {
-                    await openSearch();
-                }
-            });
-
-            closeBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                closeSearch();
-            });
-
-            searchInput.addEventListener("input", () => {
-                const q = searchInput.value.trim().toLowerCase();
-
-                const results = allItems.filter(item =>
-                    (item.name || "").toLowerCase().includes(q)
-                );
-
-                renderSuggestions(results, searchInput.value);
-            });
-
-            searchInput.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    const q = searchInput.value.trim();
-                    if (!q) return;
-                    window.location.href = `/Search?q=${encodeURIComponent(q)}`;
-                }
-
-                if (e.key === "Escape") {
-                    closeSearch();
-                }
-            });
-
-            document.addEventListener("click", (e) => {
-                if (!searchBar.contains(e.target) && !searchBtn.contains(e.target)) {
-                    suggestionBox.classList.remove("show");
-                }
-            });
-        })();
+        window.currentUserId = '@User.Identity?.Name';
     </script>
 </body>
 </html>

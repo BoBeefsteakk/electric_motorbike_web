@@ -40,7 +40,7 @@ builder.Services.AddHttpClient("proxy").ConfigurePrimaryHttpMessageHandler(() =>
     });
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<CartService>();
+
 
 var app = builder.Build();
 

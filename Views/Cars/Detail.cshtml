@@ -1,4 +1,5 @@
-﻿@model VinfastWeb.Models.Car
+﻿@using System.Text.Json
+@model VinfastWeb.Models.Car
 @{
     ViewData["Title"] = Model.Name;
 
@@ -236,11 +237,11 @@
 @section Scripts {
     <script>
         const productId    = @Model.Id;
-        const productName  = '@Model.Name.Replace("'", "\\'")';
+        const productName  = @Html.Raw(Json.Serialize(Model.Name));
         const productPrice = @Model.Price;
-        const productImg   = '@Model.Image';
+        const productImg   = @Html.Raw(Json.Serialize(Model.ImageUrl));
         let qty            = 1;
-        let chosenColor    = '@colors[0].Name';
+        let chosenColor    = @Html.Raw(JsonSerializer.Serialize(colors[0].Name));
 
         function changeQty(d) {
           qty = Math.max(1, qty + d);
@@ -257,7 +258,15 @@
           el.classList.add('active');
         }
         function addToCartDetail() {
-          addToCart(productId, 'car', productName + ' - ' + chosenColor, productPrice, productImg);
+          addToCart(
+            productId,
+            'car',
+            productName + ' - ' + chosenColor,
+            productPrice,
+            productImg,
+            chosenColor,
+            null
+          );
         }
         function switchTab(btn, tabId) {
           document.querySelectorAll('.dt-itab').forEach(t => t.classList.remove('active'));

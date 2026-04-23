@@ -1,10 +1,19 @@
 ﻿@model VinfastWeb.ViewModels.CartViewModel
+@using VinfastWeb.Models
+@using VinfastWeb.ViewModels
+
 @{
+    var cartModel = Model ?? new CartViewModel
+    {
+        Items = new List<CartItem>()
+    };
+
+    cartModel.Items ??= new List<CartItem>();
+
     ViewData["Title"] = "Giỏ Hàng";
 }
 
 <style>
-    /* ── Cart page – đồng bộ ch- design system ── */
     .cart-page {
         padding: 48px 0 80px;
         min-height: 60vh;
@@ -24,7 +33,6 @@
         margin-bottom: 36px;
     }
 
-    /* ── Table card ── */
     .cart-card {
         background: #fff;
         border-radius: 16px;
@@ -67,7 +75,6 @@
             vertical-align: middle;
         }
 
-    /* Product cell */
     .cart-product-wrap {
         display: flex;
         align-items: center;
@@ -99,7 +106,6 @@
         border-radius: 20px;
     }
 
-    /* Price cells */
     .cart-price {
         font-weight: 600;
         color: #333;
@@ -112,7 +118,6 @@
         white-space: nowrap;
     }
 
-    /* Qty input */
     .cart-qty-wrap {
         display: flex;
         align-items: center;
@@ -159,7 +164,6 @@
             border-color: #1565c0;
         }
 
-    /* Remove btn */
     .cart-remove-btn {
         width: 32px;
         height: 32px;
@@ -180,7 +184,6 @@
             color: #e91e63;
         }
 
-    /* ── Summary panel ── */
     .cart-summary {
         background: #fff;
         border-radius: 16px;
@@ -223,7 +226,6 @@
                 font-weight: 900;
             }
 
-    /* Checkout btn – khớp ch-hero-btn-primary */
     .cart-checkout-btn {
         display: flex;
         align-items: center;
@@ -267,7 +269,6 @@
             color: #e91e63;
         }
 
-    /* Voucher row */
     .cart-voucher-row {
         display: flex;
         gap: 8px;
@@ -308,7 +309,6 @@
             color: #1565c0;
         }
 
-    /* ── Empty state ── */
     .cart-empty {
         text-align: center;
         padding: 80px 24px;
@@ -331,7 +331,6 @@
         margin-bottom: 28px;
     }
 
-    /* Breadcrumb */
     .cart-breadcrumb {
         font-size: .85rem;
         color: #aaa;
@@ -351,7 +350,6 @@
             margin: 0 8px;
         }
 
-    /* Continue shopping */
     .cart-continue-link {
         display: inline-flex;
         align-items: center;
@@ -372,8 +370,6 @@
 
 <section class="cart-page">
     <div class="container">
-
-        <!-- Breadcrumb -->
         <div class="cart-breadcrumb">
             <a href="/">Trang Chủ</a>
             <span>/</span>
@@ -381,240 +377,355 @@
         </div>
 
         <h2 class="cart-page-title">Giỏ Hàng Của Bạn</h2>
-        <p class="cart-page-sub">
-            @if (Model.Items.Any())
-            {
-                <text>Bạn có @Model.Items.Count sản phẩm trong giỏ hàng</text>
-            }
-            else
-            {
-                <text>Giỏ hàng hiện đang trống</text>
-            }
-        </p>
+        <p class="cart-page-sub" id="cartSubText">Đang tải giỏ hàng...</p>
 
-        @if (!Model.Items.Any())
-        {
-            <!-- Empty state -->
-            <div class="cart-card">
-                <div class="cart-empty">
-                    <div class="cart-empty-icon"><i class="fas fa-shopping-cart"></i></div>
-                    <h3>Giỏ hàng trống</h3>
-                    <p>Hãy thêm sản phẩm yêu thích của bạn vào giỏ hàng nhé!</p>
-                    <a href="/Products" class="ch-hero-btn-primary" style="display:inline-flex;gap:8px;align-items:center">
-                        Khám phá xe ngay <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="row g-4">
-                <!-- Left: Cart items -->
-                <div class="col-lg-8">
-
-                    <a href="/Products" class="cart-continue-link">
-                        <i class="fas fa-arrow-left"></i> Tiếp tục mua sắm
-                    </a>
-
-                    <div class="cart-card">
-                        <table class="cart-table" id="cartTable">
-                            <thead>
-                                <tr>
-                                    <th>Sản phẩm</th>
-                                    <th>Giá</th>
-                                    <th>Số lượng</th>
-                                    <th>Tổng</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.Items)
-                                {
-                                    <tr data-id="@item.ProductId" data-type="@item.ProductType" class="cart-row">
-                                        <td>
-                                            <div class="cart-product-wrap">
-                                                <img src="@item.Image"
-                                                     class="cart-product-img"
-                                                     alt="@item.Name"
-                                                     onerror="this.src='/images/no-image.png'" />
-                                                <div>
-                                                    <div class="cart-product-name">@item.Name</div>
-                                                    <span class="cart-product-type">@item.ProductType</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="cart-price">@item.FormattedPrice</div>
-                                        </td>
-                                        <td>
-                                            <div class="cart-qty-wrap">
-                                                <button class="cart-qty-btn qty-minus" type="button">
-                                                    <i class="fas fa-minus" style="font-size:.7rem"></i>
-                                                </button>
-                                                <input type="number"
-                                                       value="@item.Quantity"
-                                                       min="1"
-                                                       class="qty-input" />
-                                                <button class="cart-qty-btn qty-plus" type="button">
-                                                    <i class="fas fa-plus" style="font-size:.7rem"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="cart-item-total item-total">@item.FormattedTotal</div>
-                                        </td>
-                                        <td>
-                                            <button class="cart-remove-btn btn-remove" type="button" title="Xoá">
-                                                <i class="fas fa-times" style="font-size:.8rem"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Right: Summary -->
-                <div class="col-lg-4">
-                    <div class="cart-summary">
-                        <div class="cart-summary-title">
-                            <i class="fas fa-receipt" style="color:#1565c0;margin-right:8px"></i>
-                            Tóm Tắt Đơn Hàng
-                        </div>
-
-                        <!-- Voucher -->
-                        <div class="cart-voucher-row">
-                            <input type="text" class="cart-voucher-input" placeholder="Nhập mã giảm giá..." id="voucherInput" />
-                            <button class="cart-voucher-btn" onclick="applyVoucher()">Áp dụng</button>
-                        </div>
-
-                        <div class="cart-summary-row">
-                            <span>Tạm tính</span>
-                            <span class="fw-bold">@Model.FormattedGrandTotal</span>
-                        </div>
-                        <div class="cart-summary-row">
-                            <span>Phí vận chuyển</span>
-                            <span style="color:#388e3c;font-weight:700">Miễn phí</span>
-                        </div>
-                        <div class="cart-summary-row">
-                            <span>Giảm giá</span>
-                            <span id="discountVal">— 0 ₫</span>
-                        </div>
-
-                        <div class="cart-summary-row total">
-                            <span>Tổng cộng</span>
-                            <span class="val" id="grandTotal">@Model.FormattedGrandTotal</span>
-                        </div>
-
-                        <a href="/Checkout" class="cart-checkout-btn btn-checkout">
-                            Thanh Toán Ngay <i class="fas fa-arrow-right"></i>
-                        </a>
-
-                        <button id="clearCart" class="cart-clear-btn">
-                            <i class="fas fa-trash-alt" style="font-size:.8rem;margin-right:4px"></i>
-                            Xóa sạch giỏ hàng
-                        </button>
-
-                        <!-- Trust badges -->
-                        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0">
-                            <div style="text-align:center;font-size:.72rem;color:#aaa">
-                                <i class="fas fa-shield-alt" style="display:block;font-size:1.1rem;color:#388e3c;margin-bottom:4px"></i>
-                                Bảo mật<br>thanh toán
-                            </div>
-                            <div style="text-align:center;font-size:.72rem;color:#aaa">
-                                <i class="fas fa-undo" style="display:block;font-size:1.1rem;color:#1565c0;margin-bottom:4px"></i>
-                                Đổi trả<br>30 ngày
-                            </div>
-                            <div style="text-align:center;font-size:.72rem;color:#aaa">
-                                <i class="fas fa-headset" style="display:block;font-size:1.1rem;color:#f57c00;margin-bottom:4px"></i>
-                                Hỗ trợ<br>24/7
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-
+        <div id="cartContent"></div>
     </div>
 </section>
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        function formatMoney(value) {
+            return (Number(value || 0)).toLocaleString('vi-VN') + ' ₫';
+        }
 
-            // ── Qty +/- buttons ──
+        function applyVoucher() {
+            const code = document.getElementById('voucherInput')?.value?.trim()?.toUpperCase();
+            if (!code) return;
+            alert('Mã "' + code + '" chưa được nhận diện. Vui lòng thử lại!');
+        }
+
+        function renderCartPage(items, grandTotal) {
+            const cartContent = document.getElementById('cartContent');
+            const cartSubText = document.getElementById('cartSubText');
+
+            if (!items || items.length === 0) {
+                cartSubText.textContent = 'Giỏ hàng hiện đang trống';
+
+                cartContent.innerHTML = `
+                    <div class="cart-card">
+                        <div class="cart-empty">
+                            <div class="cart-empty-icon"><i class="fas fa-shopping-cart"></i></div>
+                            <h3>Giỏ hàng trống</h3>
+                            <p>Hãy thêm sản phẩm yêu thích của bạn vào giỏ hàng nhé!</p>
+                            <a href="/Products" class="ch-hero-btn-primary" style="display:inline-flex;gap:8px;align-items:center">
+                                Khám phá xe ngay <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            cartSubText.textContent = `Bạn có ${items.length} sản phẩm trong giỏ hàng`;
+
+            const rowsHtml = items.map(item => {
+                const itemTotal = Number(item.price || 0) * Number(item.quantity || 0);
+
+                return `
+                    <tr data-id="${item.product_id}" data-type="${item.product_type}" class="cart-row">
+                        <td>
+                            <div class="cart-product-wrap">
+                                <img src="${item.image || '/images/no-image.png'}"
+                                     class="cart-product-img"
+                                     alt="${item.name || ''}"
+                                     onerror="this.src='/images/no-image.png'" />
+                                <div>
+                                    <div class="cart-product-name">${item.name || ''}</div>
+                                    <span class="cart-product-type">${item.product_type || ''}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="cart-price">${formatMoney(item.price)}</div>
+                        </td>
+                        <td>
+                            <div class="cart-qty-wrap">
+                                <button class="cart-qty-btn qty-minus" type="button">
+                                    <i class="fas fa-minus" style="font-size:.7rem"></i>
+                                </button>
+                                <input type="number"
+                                       value="${item.quantity}"
+                                       min="1"
+                                       class="qty-input" />
+                                <button class="cart-qty-btn qty-plus" type="button">
+                                    <i class="fas fa-plus" style="font-size:.7rem"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="cart-item-total item-total">${formatMoney(itemTotal)}</div>
+                        </td>
+                        <td>
+                            <button class="cart-remove-btn btn-remove" type="button" title="Xoá">
+                                <i class="fas fa-times" style="font-size:.8rem"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            cartContent.innerHTML = `
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <a href="/Products" class="cart-continue-link">
+                            <i class="fas fa-arrow-left"></i> Tiếp tục mua sắm
+                        </a>
+
+                        <div class="cart-card">
+                            <table class="cart-table" id="cartTable">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Giá</th>
+                                        <th>Số lượng</th>
+                                        <th>Tổng</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rowsHtml}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="cart-summary">
+                            <div class="cart-summary-title">
+                                <i class="fas fa-receipt" style="color:#1565c0;margin-right:8px"></i>
+                                Tóm Tắt Đơn Hàng
+                            </div>
+
+                            <div class="cart-voucher-row">
+                                <input type="text" class="cart-voucher-input" placeholder="Nhập mã giảm giá..." id="voucherInput" />
+                                <button class="cart-voucher-btn" onclick="applyVoucher()">Áp dụng</button>
+                            </div>
+
+                            <div class="cart-summary-row">
+                                <span>Tạm tính</span>
+                                <span class="fw-bold">${formatMoney(grandTotal)}</span>
+                            </div>
+                            <div class="cart-summary-row">
+                                <span>Phí vận chuyển</span>
+                                <span style="color:#388e3c;font-weight:700">Miễn phí</span>
+                            </div>
+                            <div class="cart-summary-row">
+                                <span>Giảm giá</span>
+                                <span id="discountVal">— 0 ₫</span>
+                            </div>
+
+                            <div class="cart-summary-row total">
+                                <span>Tổng cộng</span>
+                                <span class="val" id="grandTotal">${formatMoney(grandTotal)}</span>
+                            </div>
+
+                            <button type="button" class="cart-checkout-btn btn-checkout">
+                                Thanh Toán Ngay <i class="fas fa-arrow-right"></i>
+                            </button>
+
+                            <button id="clearCart" class="cart-clear-btn">
+                                <i class="fas fa-trash-alt" style="font-size:.8rem;margin-right:4px"></i>
+                                Xóa sạch giỏ hàng
+                            </button>
+
+                            <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0">
+                                <div style="text-align:center;font-size:.72rem;color:#aaa">
+                                    <i class="fas fa-shield-alt" style="display:block;font-size:1.1rem;color:#388e3c;margin-bottom:4px"></i>
+                                    Bảo mật<br>thanh toán
+                                </div>
+                                <div style="text-align:center;font-size:.72rem;color:#aaa">
+                                    <i class="fas fa-undo" style="display:block;font-size:1.1rem;color:#1565c0;margin-bottom:4px"></i>
+                                    Đổi trả<br>30 ngày
+                                </div>
+                                <div style="text-align:center;font-size:.72rem;color:#aaa">
+                                    <i class="fas fa-headset" style="display:block;font-size:1.1rem;color:#f57c00;margin-bottom:4px"></i>
+                                    Hỗ trợ<br>24/7
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            bindCartEvents();
+        }
+
+        function bindCartEvents() {
             document.querySelectorAll('.qty-minus').forEach(btn => {
                 btn.addEventListener('click', function () {
-                    const input = this.closest('.cart-qty-wrap').querySelector('.qty-input');
-                    if (parseInt(input.value) > 1) {
-                        input.value = parseInt(input.value) - 1;
-                        input.dispatchEvent(new Event('change'));
+                    const row = this.closest('tr');
+                    const input = row.querySelector('.qty-input');
+                    let qty = parseInt(input.value) || 1;
+
+                    if (qty > 1) {
+                        qty -= 1;
+                        input.value = qty;
+                        updateQty(
+                            parseInt(row.dataset.id),
+                            row.dataset.type,
+                            qty,
+                            row
+                        );
                     }
                 });
             });
 
             document.querySelectorAll('.qty-plus').forEach(btn => {
                 btn.addEventListener('click', function () {
-                    const input = this.closest('.cart-qty-wrap').querySelector('.qty-input');
-                    input.value = parseInt(input.value) + 1;
-                    input.dispatchEvent(new Event('change'));
+                    const row = this.closest('tr');
+                    const input = row.querySelector('.qty-input');
+                    let qty = parseInt(input.value) || 1;
+
+                    qty += 1;
+                    input.value = qty;
+                    updateQty(
+                        parseInt(row.dataset.id),
+                        row.dataset.type,
+                        qty,
+                        row
+                    );
                 });
             });
 
-            // ── Qty change → update total ──
             document.querySelectorAll('.qty-input').forEach(input => {
                 input.addEventListener('change', function () {
                     const row = this.closest('tr');
-                    const priceText = row.querySelector('.cart-price').textContent
-                        .replace(/[^0-9]/g, '');
-                    const price = parseInt(priceText) || 0;
-                    const qty   = parseInt(this.value) || 1;
-                    const total = price * qty;
+                    let qty = parseInt(this.value) || 1;
+                    if (qty < 1) qty = 1;
+                    this.value = qty;
 
-                    row.querySelector('.item-total').textContent =
-                        total.toLocaleString('vi-VN') + ' ₫';
-
-                    recalcGrandTotal();
+                    updateQty(
+                        parseInt(row.dataset.id),
+                        row.dataset.type,
+                        qty,
+                        row
+                    );
                 });
             });
 
-            // ── Remove row ──
             document.querySelectorAll('.btn-remove').forEach(btn => {
                 btn.addEventListener('click', function () {
                     const row = this.closest('tr');
-                    row.style.transition = 'opacity .25s, transform .25s';
-                    row.style.opacity = '0';
-                    row.style.transform = 'translateX(20px)';
-                    setTimeout(() => { row.remove(); recalcGrandTotal(); }, 250);
+                    removeItem(
+                        parseInt(row.dataset.id),
+                        row.dataset.type
+                    );
                 });
             });
+            const btnCheckout = document.querySelector('.btn-checkout');
+            if (btnCheckout) {
+                btnCheckout.addEventListener('click', async function (e) {
+                    e.preventDefault();
 
-            // ── Clear all ──
-            const clearBtn = document.getElementById('clearCart');
-            if (clearBtn) {
-                clearBtn.addEventListener('click', function () {
-                    document.querySelectorAll('.cart-row').forEach(row => row.remove());
-                    recalcGrandTotal();
+                    const result = await Swal.fire({
+                        title: 'Xác nhận thanh toán?',
+                        text: "Đơn hàng của bạn sẽ được xử lý ngay lập tức!",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#1a1a1a',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Đồng ý',
+                        cancelButtonText: 'Hủy'
+                    });
+
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Đang xử lý...',
+                            didOpen: () => { Swal.showLoading(); },
+                            allowOutsideClick: false
+                        });
+
+                        try {
+                            const userId = window.currentUserId;
+
+                            const response = await fetch('http://localhost:5000/api/order/checkout', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    user_id: userId
+                                })
+                            });
+
+                            const data = await response.json();
+
+                            if (data.success) {
+                                const cartTable = document.getElementById('cartTable');
+                                if (cartTable) cartTable.innerHTML = '';
+
+                                const grandTotal = document.getElementById('grandTotal');
+                                if (grandTotal) grandTotal.innerText = '0 ₫';
+
+                                const cartBadge = document.getElementById('cartBadge');
+                                if (cartBadge) {
+                                    cartBadge.innerText = '0';
+                                    cartBadge.style.display = 'none';
+                                }
+
+                                await Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công!',
+                                    text: `Đơn hàng ${data.order_id} đã được tạo.`,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                                window.location.href = '/Order/Success';
+                            } else {
+                                Swal.fire('Lỗi!', data.message || 'Không thể checkout.', 'error');
+                            }
+                        } catch (error) {
+                            console.error('Checkout Error:', error);
+                            Swal.fire('Thất bại!', 'Không thể kết nối đến máy chủ.', 'error');
+                        }
+                    }
                 });
             }
-
-            function recalcGrandTotal() {
-                let total = 0;
-                document.querySelectorAll('.item-total').forEach(el => {
-                    total += parseInt(el.textContent.replace(/[^0-9]/g, '')) || 0;
-                });
-                const formatted = total.toLocaleString('vi-VN') + ' ₫';
-                const el = document.getElementById('grandTotal');
-                if (el) el.textContent = formatted;
-            }
-        });
-
-        function applyVoucher() {
-            const code = document.getElementById('voucherInput').value.trim().toUpperCase();
-            if (!code) return;
-            // Placeholder — tích hợp API voucher tại đây
-            alert('Mã "' + code + '" chưa được nhận diện. Vui lòng thử lại!');
         }
+
+        async function loadCartPage() {
+            try {
+                const userId = window.currentUserId;
+                const cartContent = document.getElementById('cartContent');
+                const cartSubText = document.getElementById('cartSubText');
+
+                if (!userId) {
+                    cartSubText.textContent = 'Bạn cần đăng nhập để xem giỏ hàng';
+                    cartContent.innerHTML = `
+                        <div class="cart-card">
+                            <div class="cart-empty">
+                                <div class="cart-empty-icon"><i class="fas fa-user-lock"></i></div>
+                                <h3>Chưa đăng nhập</h3>
+                                <p>Vui lòng đăng nhập để sử dụng giỏ hàng.</p>
+                                <a href="/Auth/Login" class="ch-hero-btn-primary" style="display:inline-flex;gap:8px;align-items:center">
+                                    Đăng nhập ngay <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const res = await fetch(`http://localhost:5000/api/cart?user_id=${encodeURIComponent(userId)}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    renderCartPage(data.items || [], data.grandTotal || 0);
+                } else {
+                    cartSubText.textContent = 'Không thể tải giỏ hàng';
+                    cartContent.innerHTML = `<div class="cart-card"><div class="cart-empty"><h3>Lỗi tải giỏ hàng</h3></div></div>`;
+                }
+            } catch (err) {
+                console.error('LOAD CART ERROR:', err);
+                const cartSubText = document.getElementById('cartSubText');
+                const cartContent = document.getElementById('cartContent');
+                cartSubText.textContent = 'Không thể tải giỏ hàng';
+                cartContent.innerHTML = `<div class="cart-card"><div class="cart-empty"><h3>Lỗi kết nối BE</h3></div></div>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadCartPage();
+        });
     </script>
 }
